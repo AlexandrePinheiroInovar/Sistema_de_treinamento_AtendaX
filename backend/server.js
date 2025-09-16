@@ -30,14 +30,24 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Firebase Admin initialization
 if (!admin.apps.length) {
   try {
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}');
+    // Usar as credenciais do projeto Firebase
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-      databaseURL: process.env.FIREBASE_DATABASE_URL
+      credential: admin.credential.applicationDefault(),
+      projectId: 'sistema-de-treinamento-atendax',
+      databaseURL: 'https://sistema-de-treinamento-atendax-default-rtdb.firebaseio.com'
     });
     console.log('✅ Firebase Admin inicializado com sucesso');
   } catch (error) {
     console.error('❌ Erro ao inicializar Firebase Admin:', error.message);
+    // Fallback para inicialização sem credenciais para desenvolvimento
+    try {
+      admin.initializeApp({
+        projectId: 'sistema-de-treinamento-atendax'
+      });
+      console.log('⚠️ Firebase Admin inicializado em modo de desenvolvimento');
+    } catch (fallbackError) {
+      console.error('❌ Falha completa na inicialização do Firebase Admin:', fallbackError.message);
+    }
   }
 }
 
