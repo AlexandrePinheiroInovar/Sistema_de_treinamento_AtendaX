@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Função para verificar se o usuário é admin
+    function isAdmin() {
+      return resource.data.role == 'admin';
+    }
+
+    // Função para verificar se o usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Função para verificar se é o próprio usuário
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Regras para coleção de usuários
+    match /users/{userId} {
+      // Leitura: usuário pode ler seus próprios dados, admin pode ler todos
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+
+      // Escrita: apenas admin pode criar/atualizar usuários
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Regras para coleção de vídeos
+    match /videos/{videoId} {
+      // Leitura: usuários autenticados podem ler vídeos ativos
+      allow read: if isAuthenticated() && resource.data.isActive == true;
+
+      // Escrita: apenas admin pode gerenciar vídeos
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Regras para progresso do usuário
+    match /user_progress/{progressId} {
+      // Leitura: usuário pode ler apenas seu próprio progresso, admin pode ler todos
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+
+      // Escrita: usuário pode escrever apenas seu próprio progresso
+      allow write: if isAuthenticated() && isOwner(resource.data.userId);
+    }
+
+    // Regras para certificados
+    match /certificates/{certificateId} {
+      // Leitura: usuário pode ler apenas seu próprio certificado, admin pode ler todos
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+
+      // Escrita: apenas o sistema (backend) pode criar certificados
+      // Usuários não podem escrever diretamente
+      allow write: if false;
+    }
+
+    // Negar acesso a todas as outras coleções
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Regras para certificados
+    match /certificates/{userId}/{fileName} {
+      // Apenas o proprietário pode ler seus certificados
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // Apenas o sistema pode escrever certificados (via Admin SDK)
+      allow write: if false;
+    }
+
+    // Regras para uploads de usuário (se necessário no futuro)
+    match /uploads/{userId}/{fileName} {
+      // Usuário pode ler e escrever apenas seus próprios arquivos
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Negar acesso a todos os outros arquivos
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
