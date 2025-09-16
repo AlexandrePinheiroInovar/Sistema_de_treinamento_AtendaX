@@ -11,7 +11,7 @@ import {
   Calendar,
   User,
   RefreshCw
-} from 'lucide-react';
+} from '../components/Icons';
 
 const Certificate = () => {
   const { userData, getCurrentUserToken } = useAuth();

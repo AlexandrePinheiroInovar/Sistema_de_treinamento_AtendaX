@@ -9,7 +9,7 @@ import {
   ArrowRight,
   Search,
   Filter
-} from 'lucide-react';
+} from '../components/Icons';
 
 const Videos = () => {
   const { getCurrentUserToken } = useAuth();

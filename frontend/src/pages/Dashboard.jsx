@@ -10,7 +10,7 @@ import {
   CheckCircle,
   ArrowRight,
   BookOpen
-} from 'lucide-react';
+} from '../components/Icons';
 
 const Dashboard = () => {
   const { userData, getCurrentUserToken } = useAuth();

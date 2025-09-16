@@ -12,7 +12,7 @@ import {
   Eye,
   Calendar,
   BarChart
-} from 'lucide-react';
+} from '../../components/Icons';
 
 const AdminDashboard = () => {
   const { getCurrentUserToken } = useAuth();

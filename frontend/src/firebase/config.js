@@ -5,12 +5,13 @@ import { getStorage, connectStorageEmulator } from 'firebase/storage';
 
 // Configuração do Firebase - substitua pelos dados do seu projeto
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyAOapGFsNVPA2Cd9R9Glmvs7vDzpkZPpbo",
+  authDomain: "sistema-de-treinamento-atendax.firebaseapp.com",
+  projectId: "sistema-de-treinamento-atendax",
+  storageBucket: "sistema-de-treinamento-atendax.firebasestorage.app",
+  messagingSenderId: "771504470193",
+  appId: "1:771504470193:web:909ce3945801ff813a0a90",
+  measurementId: "G-HMX3Z33980"
 };
 
 // Inicializar Firebase

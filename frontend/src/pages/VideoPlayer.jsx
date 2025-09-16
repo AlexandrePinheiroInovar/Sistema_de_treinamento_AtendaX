@@ -9,7 +9,7 @@ import {
   Clock,
   AlertTriangle,
   PlayCircle
-} from 'lucide-react';
+} from '../components/Icons';
 
 const VideoPlayer = () => {
   const { videoId } = useParams();

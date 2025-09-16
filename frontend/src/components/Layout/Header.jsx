@@ -11,7 +11,7 @@ import {
   Users,
   Settings,
   Award
-} from 'lucide-react';
+} from '../Icons';
 
 const Header = () => {
   const { userData, logout, isAdmin } = useAuth();

@@ -14,7 +14,7 @@ import {
   User,
   AlertTriangle,
   X
-} from 'lucide-react';
+} from '../../components/Icons';
 
 const AdminUsers = () => {
   const { getCurrentUserToken } = useAuth();
