@@ -116,6 +116,27 @@ export const AuthProvider = ({ children }) => {
     return userData?.role === 'admin';
   };
 
+  // Verificar se é supervisor ou admin (pode gerenciar usuários)
+  const canManageUsers = () => {
+    return userData?.role === 'admin' || userData?.role === 'supervisor';
+  };
+
+  // Verificar se tem determinado cargo ou superior
+  const hasRole = (requiredRole) => {
+    if (!userData?.role) return false;
+
+    const roleHierarchy = {
+      'admin': 3,
+      'supervisor': 2,
+      'user': 1
+    };
+
+    const userLevel = roleHierarchy[userData.role] || 0;
+    const requiredLevel = roleHierarchy[requiredRole] || 0;
+
+    return userLevel >= requiredLevel;
+  };
+
   // Monitor de estado de autenticação
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -151,6 +172,8 @@ export const AuthProvider = ({ children }) => {
     resetPassword,
     getCurrentUserToken,
     isAdmin,
+    canManageUsers,
+    hasRole,
     setError
   };
 
