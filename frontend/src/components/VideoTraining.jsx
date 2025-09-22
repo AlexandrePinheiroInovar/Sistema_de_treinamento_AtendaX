@@ -21,10 +21,14 @@ const VideoTraining = () => {
   });
   const [videoComments, setVideoComments] = useState({});
   const [newComment, setNewComment] = useState('');
+  const [editingComment, setEditingComment] = useState(null);
+  const [editCommentText, setEditCommentText] = useState('');
   const [videoPlayer, setVideoPlayer] = useState(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
   const [videoDuration, setVideoDuration] = useState(300);
+  const [videoPositions, setVideoPositions] = useState({});
+  const [currentVideoTime, setCurrentVideoTime] = useState(0);
 
   // Dados mockados de vídeos (em um sistema real, viria da API)
   const [videos] = useState([
@@ -106,7 +110,7 @@ const VideoTraining = () => {
     }
   ]);
 
-  // Carregar progresso dos vídeos e comentários do localStorage
+  // Carregar progresso dos vídeos, comentários e posições do localStorage
   useEffect(() => {
     const savedProgress = localStorage.getItem('atendax_video_progress');
     if (savedProgress) {
@@ -116,6 +120,11 @@ const VideoTraining = () => {
     const savedComments = localStorage.getItem('atendax_video_comments');
     if (savedComments) {
       setVideoComments(JSON.parse(savedComments));
+    }
+
+    const savedPositions = localStorage.getItem('atendax_video_positions');
+    if (savedPositions) {
+      setVideoPositions(JSON.parse(savedPositions));
     }
   }, []);
 
@@ -127,6 +136,21 @@ const VideoTraining = () => {
     };
     setVideoProgress(updatedProgress);
     localStorage.setItem('atendax_video_progress', JSON.stringify(updatedProgress));
+  };
+
+  // Salvar posição do vídeo no localStorage
+  const saveVideoPosition = (videoId, time) => {
+    const updatedPositions = {
+      ...videoPositions,
+      [videoId]: time
+    };
+    setVideoPositions(updatedPositions);
+    localStorage.setItem('atendax_video_positions', JSON.stringify(updatedPositions));
+  };
+
+  // Recuperar posição salva do vídeo
+  const getSavedVideoPosition = (videoId) => {
+    return videoPositions[videoId] || 0;
   };
 
   // Carregar API do YouTube
@@ -173,6 +197,12 @@ const VideoTraining = () => {
           // Pegar duração real do vídeo
           const duration = event.target.getDuration();
           setVideoDuration(duration);
+
+          // Restaurar posição salva do vídeo
+          const savedPosition = getSavedVideoPosition(selectedVideo.id);
+          if (savedPosition > 0) {
+            event.target.seekTo(savedPosition, true);
+          }
         },
         onStateChange: (event) => {
           // 1 = playing, 2 = paused
@@ -180,6 +210,12 @@ const VideoTraining = () => {
             setIsVideoPlaying(true);
           } else {
             setIsVideoPlaying(false);
+            // Salvar posição quando pausar
+            if (videoPlayer) {
+              const currentTime = videoPlayer.getCurrentTime();
+              setCurrentVideoTime(currentTime);
+              saveVideoPosition(selectedVideo.id, currentTime);
+            }
           }
         }
       }
@@ -205,10 +241,19 @@ const VideoTraining = () => {
       totalWatchTime = parseInt(savedWatchTime);
     }
 
-    // Intervalo para contar progresso apenas quando vídeo está tocando
+    // Intervalo para contar progresso e salvar posição quando vídeo está tocando
     progressInterval = setInterval(() => {
-      if (isVideoPlaying) {
+      if (isVideoPlaying && videoPlayer) {
         totalWatchTime += 1;
+
+        // Pegar posição atual do vídeo
+        const currentTime = videoPlayer.getCurrentTime();
+        setCurrentVideoTime(currentTime);
+
+        // Salvar posição a cada 5 segundos para não sobrecarregar o localStorage
+        if (totalWatchTime % 5 === 0) {
+          saveVideoPosition(selectedVideo.id, currentTime);
+        }
 
         // Salvar tempo assistido
         localStorage.setItem(`atendax_watch_time_${selectedVideo.id}`, totalWatchTime.toString());
@@ -302,7 +347,8 @@ const VideoTraining = () => {
       text: newComment,
       author: userData?.name || 'Usuário',
       timestamp: new Date().toLocaleString(),
-      videoId: selectedVideo.id
+      videoId: selectedVideo.id,
+      userId: userData?.id || 'anonymous'
     };
 
     const updatedComments = {
@@ -313,6 +359,55 @@ const VideoTraining = () => {
     setVideoComments(updatedComments);
     localStorage.setItem('atendax_video_comments', JSON.stringify(updatedComments));
     setNewComment('');
+  };
+
+  // Excluir comentário
+  const deleteComment = (commentId) => {
+    if (!selectedVideo) return;
+
+    const updatedComments = {
+      ...videoComments,
+      [selectedVideo.id]: (videoComments[selectedVideo.id] || []).filter(comment => comment.id !== commentId)
+    };
+
+    setVideoComments(updatedComments);
+    localStorage.setItem('atendax_video_comments', JSON.stringify(updatedComments));
+  };
+
+  // Iniciar edição de comentário
+  const startEditComment = (comment) => {
+    setEditingComment(comment.id);
+    setEditCommentText(comment.text);
+  };
+
+  // Cancelar edição
+  const cancelEditComment = () => {
+    setEditingComment(null);
+    setEditCommentText('');
+  };
+
+  // Salvar edição do comentário
+  const saveEditComment = () => {
+    if (!editCommentText.trim() || !selectedVideo || !editingComment) return;
+
+    const updatedComments = {
+      ...videoComments,
+      [selectedVideo.id]: (videoComments[selectedVideo.id] || []).map(comment =>
+        comment.id === editingComment
+          ? { ...comment, text: editCommentText, editedAt: new Date().toLocaleString() }
+          : comment
+      )
+    };
+
+    setVideoComments(updatedComments);
+    localStorage.setItem('atendax_video_comments', JSON.stringify(updatedComments));
+    setEditingComment(null);
+    setEditCommentText('');
+  };
+
+  // Verificar se o usuário pode editar/excluir o comentário
+  const canEditOrDeleteComment = (comment) => {
+    return comment.userId === (userData?.id || 'anonymous');
   };
 
   // Filtrar vídeos
@@ -502,14 +597,22 @@ const VideoTraining = () => {
                   <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
                     <span>Progresso: {Math.round(videoProgress[selectedVideo.id] || 0)}% completo</span>
                     <span>
-                      {Math.floor((localStorage.getItem(`atendax_watch_time_${selectedVideo.id}`) || 0) / 60)}:
-                      {String((localStorage.getItem(`atendax_watch_time_${selectedVideo.id}`) || 0) % 60).padStart(2, '0')} /
-                      {Math.floor(videoDuration / 60)}:{String(videoDuration % 60).padStart(2, '0')}
+                      {Math.floor(currentVideoTime / 60)}:
+                      {String(Math.floor(currentVideoTime % 60)).padStart(2, '0')} /
+                      {Math.floor(videoDuration / 60)}:{String(Math.floor(videoDuration % 60)).padStart(2, '0')}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    {isVideoPlaying ? '▶️ Contando progresso - vídeo tocando' : '⏸️ Pausado - progresso parado'}
-                  </p>
+                  <div className="flex justify-between items-center text-xs text-gray-500 mb-2">
+                    <span>
+                      {isVideoPlaying ? '▶️ Contando progresso - vídeo tocando' : '⏸️ Pausado - progresso parado'}
+                    </span>
+                    {getSavedVideoPosition(selectedVideo.id) > 0 && (
+                      <span className="text-blue-600 font-medium">
+                        📍 Última posição: {Math.floor(getSavedVideoPosition(selectedVideo.id) / 60)}:
+                        {String(Math.floor(getSavedVideoPosition(selectedVideo.id) % 60)).padStart(2, '0')}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Seção de Comentários/Dúvidas */}
@@ -591,11 +694,70 @@ const VideoTraining = () => {
                               </svg>
                             </div>
                             <div className="flex-1">
-                              <div className="flex items-center space-x-2 mb-2">
-                                <span className="font-semibold text-gray-900">{comment.author}</span>
-                                <span className="text-gray-500 text-sm">{comment.timestamp}</span>
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center space-x-2">
+                                  <span className="font-semibold text-gray-900">{comment.author}</span>
+                                  <span className="text-gray-500 text-sm">{comment.timestamp}</span>
+                                  {comment.editedAt && (
+                                    <span className="text-gray-400 text-xs">(editado em {comment.editedAt})</span>
+                                  )}
+                                </div>
+                                {canEditOrDeleteComment(comment) && (
+                                  <div className="flex items-center space-x-2">
+                                    <button
+                                      onClick={() => startEditComment(comment)}
+                                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      title="Editar comentário"
+                                    >
+                                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                      </svg>
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        if (window.confirm('Tem certeza que deseja excluir este comentário?')) {
+                                          deleteComment(comment.id);
+                                        }
+                                      }}
+                                      className="text-red-600 hover:text-red-800 text-sm font-medium"
+                                      title="Excluir comentário"
+                                    >
+                                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                )}
                               </div>
-                              <p className="text-gray-700 leading-relaxed">{comment.text}</p>
+
+                              {editingComment === comment.id ? (
+                                <div className="space-y-3">
+                                  <textarea
+                                    value={editCommentText}
+                                    onChange={(e) => setEditCommentText(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                                    rows="3"
+                                    placeholder="Edite seu comentário..."
+                                  />
+                                  <div className="flex space-x-2">
+                                    <button
+                                      onClick={saveEditComment}
+                                      disabled={!editCommentText.trim()}
+                                      className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors"
+                                    >
+                                      Salvar
+                                    </button>
+                                    <button
+                                      onClick={cancelEditComment}
+                                      className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors"
+                                    >
+                                      Cancelar
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="text-gray-700 leading-relaxed">{comment.text}</p>
+                              )}
                             </div>
                           </div>
                         </div>

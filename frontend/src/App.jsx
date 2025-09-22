@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from './contexts/SimpleAuthContext';
 import UserManagement from './components/UserManagement';
 import VideoTraining from './components/VideoTraining';
 import Certification from './components/Certification';
+import Reports from './components/Reports';
 
 // Páginas
 function HomePage() {
@@ -342,7 +343,9 @@ function DashboardPage() {
           </div>
 
           {/* Relatórios */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer">
+          <div
+            onClick={() => navigate('/reports')}
+            className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer">
             <div className="bg-gradient-to-br from-orange-100 to-orange-200 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
               <svg className="h-6 w-6 text-orange-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -372,6 +375,7 @@ function App() {
         <Route path="/users" element={<UserManagement />} />
         <Route path="/videos" element={<VideoTraining />} />
         <Route path="/certifications" element={<Certification />} />
+        <Route path="/reports" element={<Reports />} />
       </Routes>
     </AuthProvider>
   );
