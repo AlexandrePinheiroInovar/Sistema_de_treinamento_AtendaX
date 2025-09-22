@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from './contexts/SimpleAuthContext';
 // Componentes
 import UserManagement from './components/UserManagement';
 import VideoTraining from './components/VideoTraining';
+import Certification from './components/Certification';
 
 // Páginas
 function HomePage() {
@@ -327,7 +328,9 @@ function DashboardPage() {
           </div>
 
           {/* Certificação */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer">
+          <div
+            onClick={() => navigate('/certifications')}
+            className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer">
             <div className="bg-gradient-to-br from-purple-100 to-purple-200 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
               <svg className="h-6 w-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                 <circle cx="12" cy="8" r="7"/>
@@ -335,7 +338,7 @@ function DashboardPage() {
               </svg>
             </div>
             <h3 className="text-lg font-bold text-gray-900 mb-2">Certificação</h3>
-            <p className="text-gray-600 text-sm">Acompanhar progresso e certificados</p>
+            <p className="text-gray-600 text-sm">Gerar e baixar certificados</p>
           </div>
 
           {/* Relatórios */}
@@ -368,6 +371,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/users" element={<UserManagement />} />
         <Route path="/videos" element={<VideoTraining />} />
+        <Route path="/certifications" element={<Certification />} />
       </Routes>
     </AuthProvider>
   );

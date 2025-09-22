@@ -19,6 +19,12 @@ const VideoTraining = () => {
     level: 'Iniciante',
     instructor: ''
   });
+  const [videoComments, setVideoComments] = useState({});
+  const [newComment, setNewComment] = useState('');
+  const [videoPlayer, setVideoPlayer] = useState(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [playerReady, setPlayerReady] = useState(false);
+  const [videoDuration, setVideoDuration] = useState(300);
 
   // Dados mockados de vídeos (em um sistema real, viria da API)
   const [videos] = useState([
@@ -100,11 +106,16 @@ const VideoTraining = () => {
     }
   ]);
 
-  // Carregar progresso dos vídeos do localStorage
+  // Carregar progresso dos vídeos e comentários do localStorage
   useEffect(() => {
     const savedProgress = localStorage.getItem('atendax_video_progress');
     if (savedProgress) {
       setVideoProgress(JSON.parse(savedProgress));
+    }
+
+    const savedComments = localStorage.getItem('atendax_video_comments');
+    if (savedComments) {
+      setVideoComments(JSON.parse(savedComments));
     }
   }, []);
 
@@ -117,6 +128,116 @@ const VideoTraining = () => {
     setVideoProgress(updatedProgress);
     localStorage.setItem('atendax_video_progress', JSON.stringify(updatedProgress));
   };
+
+  // Carregar API do YouTube
+  useEffect(() => {
+    // Carregar a API do YouTube se ainda não estiver carregada
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // Função global que será chamada quando a API estiver pronta
+      window.onYouTubeIframeAPIReady = () => {
+        setPlayerReady(true);
+      };
+    } else {
+      setPlayerReady(true);
+    }
+  }, []);
+
+  // Criar player do YouTube apenas uma vez quando video é selecionado
+  useEffect(() => {
+    if (!selectedVideo || !playerReady) return;
+
+    // Limpar player anterior se existir
+    if (videoPlayer && videoPlayer.destroy) {
+      videoPlayer.destroy();
+    }
+
+    // Criar novo player
+    const player = new window.YT.Player(`youtube-player-${selectedVideo.id}`, {
+      height: '100%',
+      width: '100%',
+      videoId: selectedVideo.youtubeId,
+      playerVars: {
+        autoplay: 0,
+        modestbranding: 1,
+        rel: 0,
+        enablejsapi: 1
+      },
+      events: {
+        onReady: (event) => {
+          setVideoPlayer(event.target);
+          // Pegar duração real do vídeo
+          const duration = event.target.getDuration();
+          setVideoDuration(duration);
+        },
+        onStateChange: (event) => {
+          // 1 = playing, 2 = paused
+          if (event.data === 1) {
+            setIsVideoPlaying(true);
+          } else {
+            setIsVideoPlaying(false);
+          }
+        }
+      }
+    });
+
+    return () => {
+      if (player && player.destroy) {
+        player.destroy();
+      }
+    };
+  }, [selectedVideo, playerReady]);
+
+  // Sistema de progresso separado - só depende do estado de playing
+  useEffect(() => {
+    if (!selectedVideo) return;
+
+    let progressInterval;
+    let totalWatchTime = 0;
+
+    // Recuperar tempo já assistido do localStorage
+    const savedWatchTime = localStorage.getItem(`atendax_watch_time_${selectedVideo.id}`);
+    if (savedWatchTime) {
+      totalWatchTime = parseInt(savedWatchTime);
+    }
+
+    // Intervalo para contar progresso apenas quando vídeo está tocando
+    progressInterval = setInterval(() => {
+      if (isVideoPlaying) {
+        totalWatchTime += 1;
+
+        // Salvar tempo assistido
+        localStorage.setItem(`atendax_watch_time_${selectedVideo.id}`, totalWatchTime.toString());
+
+        // Calcular progresso baseado na duração real do vídeo
+        const progressPercentage = Math.min((totalWatchTime / videoDuration) * 100, 100);
+
+        setVideoProgress(prevProgress => {
+          const updatedProgress = {
+            ...prevProgress,
+            [selectedVideo.id]: progressPercentage
+          };
+          localStorage.setItem('atendax_video_progress', JSON.stringify(updatedProgress));
+          return updatedProgress;
+        });
+
+        // Para quando atingir 100%
+        if (progressPercentage >= 100) {
+          clearInterval(progressInterval);
+        }
+      }
+    }, 1000);
+
+    return () => {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
+    };
+  }, [selectedVideo, isVideoPlaying, videoDuration]);
 
   // Extrair ID do YouTube da URL
   const extractYoutubeId = (url) => {
@@ -170,6 +291,28 @@ const VideoTraining = () => {
       instructor: ''
     });
     setShowAddVideoModal(false);
+  };
+
+  // Adicionar comentário
+  const addComment = () => {
+    if (!newComment.trim() || !selectedVideo) return;
+
+    const comment = {
+      id: Date.now(),
+      text: newComment,
+      author: userData?.name || 'Usuário',
+      timestamp: new Date().toLocaleString(),
+      videoId: selectedVideo.id
+    };
+
+    const updatedComments = {
+      ...videoComments,
+      [selectedVideo.id]: [...(videoComments[selectedVideo.id] || []), comment]
+    };
+
+    setVideoComments(updatedComments);
+    localStorage.setItem('atendax_video_comments', JSON.stringify(updatedComments));
+    setNewComment('');
   };
 
   // Filtrar vídeos
@@ -309,58 +452,164 @@ const VideoTraining = () => {
           {/* Main Content */}
           <div className="lg:col-span-3">
 
-            {/* Video Player */}
+            {/* Video Player - Modo Foco */}
             {selectedVideo && (
-              <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                <div className="aspect-w-16 aspect-h-9 mb-4">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1&modestbranding=1&rel=0`}
-                    title={selectedVideo.title}
-                    style={{ border: 0 }}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-96 rounded-lg"
-                  ></iframe>
-                </div>
-
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">{selectedVideo.title}</h2>
-                    <p className="text-gray-600 mb-3">{selectedVideo.description}</p>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span>Por {selectedVideo.instructor}</span>
-                      <span>•</span>
-                      <span>{selectedVideo.duration}</span>
-                      <span>•</span>
-                      <span>{selectedVideo.views} visualizações</span>
+              <div className="space-y-6">
+                {/* Player Principal */}
+                <div className="bg-white rounded-2xl shadow-xl p-6">
+                  <div className="aspect-w-16 aspect-h-9 mb-4 relative">
+                    {/* Player do YouTube com API JavaScript */}
+                    <div className="w-full h-96 bg-gray-900 rounded-lg overflow-hidden">
+                      <div
+                        id={`youtube-player-${selectedVideo.id}`}
+                        className="w-full h-full"
+                      ></div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setSelectedVideo(null)}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900 mb-2">{selectedVideo.title}</h2>
+                      <p className="text-gray-600 mb-3">{selectedVideo.description}</p>
+                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                        <span>Por {selectedVideo.instructor}</span>
+                        <span>•</span>
+                        <span>{selectedVideo.duration}</span>
+                        <span>•</span>
+                        <span>{selectedVideo.views} visualizações</span>
+                      </div>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => setSelectedVideo(null)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+                      >
+                        <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+                        </svg>
+                        Voltar aos Vídeos
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="bg-gray-200 rounded-full h-2 mb-4">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.round(videoProgress[selectedVideo.id] || 0)}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
+                    <span>Progresso: {Math.round(videoProgress[selectedVideo.id] || 0)}% completo</span>
+                    <span>
+                      {Math.floor((localStorage.getItem(`atendax_watch_time_${selectedVideo.id}`) || 0) / 60)}:
+                      {String((localStorage.getItem(`atendax_watch_time_${selectedVideo.id}`) || 0) % 60).padStart(2, '0')} /
+                      {Math.floor(videoDuration / 60)}:{String(videoDuration % 60).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {isVideoPlaying ? '▶️ Contando progresso - vídeo tocando' : '⏸️ Pausado - progresso parado'}
+                  </p>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="bg-gray-200 rounded-full h-2 mb-4">
-                  <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${videoProgress[selectedVideo.id] || 0}%` }}
-                  ></div>
+                {/* Seção de Comentários/Dúvidas */}
+                <div className="bg-white rounded-2xl shadow-xl p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center">
+                      <svg className="h-6 w-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      <h3 className="text-lg font-bold text-gray-900">Dúvidas e Comentários</h3>
+                      <span className="ml-3 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                        {(videoComments[selectedVideo.id] || []).length} comentários
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => setSelectedVideo(null)}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center text-sm"
+                    >
+                      <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                      Ver Todos
+                    </button>
+                  </div>
+
+                  {/* Formulário para Novo Comentário */}
+                  <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 mb-6">
+                    <div className="flex items-start space-x-3">
+                      <div className="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <textarea
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          placeholder="Escreva sua dúvida ou comentário sobre este vídeo..."
+                          rows="3"
+                          className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                        />
+                        <div className="flex justify-between items-center mt-3">
+                          <span className="text-sm text-gray-500">
+                            Comentando como {userData?.name || 'Usuário'}
+                          </span>
+                          <button
+                            onClick={addComment}
+                            disabled={!newComment.trim()}
+                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+                          >
+                            <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                            Comentar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Lista de Comentários */}
+                  <div className="space-y-4">
+                    {(videoComments[selectedVideo.id] || []).length === 0 ? (
+                      <div className="text-center py-8">
+                        <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <p className="text-gray-500">Ainda não há comentários neste vídeo</p>
+                        <p className="text-gray-400 text-sm mt-1">Seja o primeiro a comentar!</p>
+                      </div>
+                    ) : (
+                      (videoComments[selectedVideo.id] || []).map((comment) => (
+                        <div key={comment.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                          <div className="flex items-start space-x-3">
+                            <div className="bg-gray-100 text-gray-600 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <span className="font-semibold text-gray-900">{comment.author}</span>
+                                <span className="text-gray-500 text-sm">{comment.timestamp}</span>
+                              </div>
+                              <p className="text-gray-700 leading-relaxed">{comment.text}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
-                <p className="text-sm text-gray-600">
-                  Progresso: {videoProgress[selectedVideo.id] || 0}% completo
-                </p>
               </div>
             )}
 
-            {/* Videos Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredVideos.map((video) => (
+            {/* Videos Grid - Esconder quando um vídeo está selecionado */}
+            {!selectedVideo && (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredVideos.map((video) => (
                 <div key={video.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
 
                   {/* Thumbnail */}
@@ -418,10 +667,11 @@ const VideoTraining = () => {
                     <p className="text-xs text-gray-500">Por {video.instructor}</p>
                   </div>
                 </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
-            {filteredVideos.length === 0 && (
+            {!selectedVideo && filteredVideos.length === 0 && (
               <div className="text-center py-12">
                 <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
