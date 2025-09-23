@@ -31,6 +31,15 @@ const VideoTraining = () => {
   const [videoPositions, setVideoPositions] = useState({});
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
   const [showThemeSettings, setShowThemeSettings] = useState(false);
+  const [showEvaluationModal, setShowEvaluationModal] = useState(false);
+  const [videoEvaluations, setVideoEvaluations] = useState({});
+  const [currentEvaluation, setCurrentEvaluation] = useState({
+    rating: 0,
+    learningComment: '',
+    suggestions: '',
+    wouldRecommend: null,
+    completedAt: null
+  });
 
   // Dados mockados de vídeos (em um sistema real, viria da API)
   const [videos] = useState([
@@ -127,6 +136,11 @@ const VideoTraining = () => {
     const savedPositions = localStorage.getItem('atendax_video_positions');
     if (savedPositions) {
       setVideoPositions(JSON.parse(savedPositions));
+    }
+
+    const savedEvaluations = localStorage.getItem('atendax_video_evaluations');
+    if (savedEvaluations) {
+      setVideoEvaluations(JSON.parse(savedEvaluations));
     }
   }, []);
 
@@ -272,9 +286,22 @@ const VideoTraining = () => {
           return updatedProgress;
         });
 
-        // Para quando atingir 100%
+        // Para quando atingir 100% e abre modal de avaliação
         if (progressPercentage >= 100) {
           clearInterval(progressInterval);
+
+          // Verificar se já foi avaliado
+          const hasEvaluation = videoEvaluations[selectedVideo.id];
+          if (!hasEvaluation) {
+            setCurrentEvaluation({
+              rating: 0,
+              learningComment: '',
+              suggestions: '',
+              wouldRecommend: null,
+              completedAt: new Date().toISOString()
+            });
+            setShowEvaluationModal(true);
+          }
         }
       }
     }, 1000);
@@ -410,6 +437,74 @@ const VideoTraining = () => {
   // Verificar se o usuário pode editar/excluir o comentário
   const canEditOrDeleteComment = (comment) => {
     return comment.userId === (userData?.id || 'anonymous');
+  };
+
+  // Funções de Avaliação
+  const handleEvaluationSubmit = (e) => {
+    e.preventDefault();
+
+    if (!currentEvaluation.rating || currentEvaluation.wouldRecommend === null) {
+      alert('Por favor, preencha a avaliação e indique se recomendaria o vídeo.');
+      return;
+    }
+
+    const evaluation = {
+      ...currentEvaluation,
+      videoId: selectedVideo.id,
+      userId: userData?.id || 'anonymous',
+      userName: userData?.name || 'Usuário',
+      submittedAt: new Date().toISOString()
+    };
+
+    const updatedEvaluations = {
+      ...videoEvaluations,
+      [selectedVideo.id]: evaluation
+    };
+
+    setVideoEvaluations(updatedEvaluations);
+    localStorage.setItem('atendax_video_evaluations', JSON.stringify(updatedEvaluations));
+
+    setShowEvaluationModal(false);
+
+    // Reset evaluation form
+    setCurrentEvaluation({
+      rating: 0,
+      learningComment: '',
+      suggestions: '',
+      wouldRecommend: null,
+      completedAt: null
+    });
+
+    alert('Obrigado pela sua avaliação! Suas opiniões nos ajudam a melhorar nossos treinamentos.');
+  };
+
+  const closeEvaluationModal = () => {
+    setShowEvaluationModal(false);
+    setCurrentEvaluation({
+      rating: 0,
+      learningComment: '',
+      suggestions: '',
+      wouldRecommend: null,
+      completedAt: null
+    });
+  };
+
+  const renderStars = (rating, onStarClick = null) => {
+    return [...Array(5)].map((_, index) => (
+      <button
+        key={index}
+        type="button"
+        onClick={() => onStarClick && onStarClick(index + 1)}
+        className={`text-2xl transition-colors ${
+          index < rating
+            ? 'text-yellow-400 hover:text-yellow-500'
+            : 'text-gray-300 dark:text-gray-600 hover:text-yellow-300'
+        } ${onStarClick ? 'cursor-pointer' : 'cursor-default'}`}
+        disabled={!onStarClick}
+      >
+        ★
+      </button>
+    ));
   };
 
   // Filtrar vídeos
@@ -814,7 +909,14 @@ const VideoTraining = () => {
                     {/* Progress Badge */}
                     {videoProgress[video.id] > 0 && (
                       <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
-                        {videoProgress[video.id]}%
+                        {Math.round(videoProgress[video.id])}%
+                      </div>
+                    )}
+
+                    {/* Evaluation Badge */}
+                    {videoEvaluations[video.id] && (
+                      <div className="absolute top-2 left-16 bg-green-600 text-white text-xs px-2 py-1 rounded flex items-center">
+                        ★ {videoEvaluations[video.id].rating}
                       </div>
                     )}
                   </div>
@@ -1006,6 +1108,131 @@ const VideoTraining = () => {
         )}
 
       </div>
+
+      {/* Modal de Avaliação do Vídeo */}
+      {showEvaluationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center">
+                  <div className="bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Parabéns!</h3>
+                    <p className="text-gray-600 dark:text-gray-300">Você completou o vídeo "{selectedVideo?.title}"</p>
+                  </div>
+                </div>
+              </div>
+
+              <form onSubmit={handleEvaluationSubmit} className="space-y-6">
+                {/* Avaliação por Estrelas */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    Como você avalia este vídeo? *
+                  </label>
+                  <div className="flex items-center space-x-1">
+                    {renderStars(currentEvaluation.rating, (rating) =>
+                      setCurrentEvaluation(prev => ({ ...prev, rating }))
+                    )}
+                    <span className="ml-3 text-sm text-gray-600 dark:text-gray-400">
+                      {currentEvaluation.rating > 0 && (
+                        currentEvaluation.rating === 1 ? 'Muito ruim' :
+                        currentEvaluation.rating === 2 ? 'Ruim' :
+                        currentEvaluation.rating === 3 ? 'Bom' :
+                        currentEvaluation.rating === 4 ? 'Muito bom' :
+                        'Excelente'
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Comentário sobre Aprendizado */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    O que você aprendeu com este vídeo?
+                  </label>
+                  <textarea
+                    value={currentEvaluation.learningComment}
+                    onChange={(e) => setCurrentEvaluation(prev => ({ ...prev, learningComment: e.target.value }))}
+                    rows="3"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    placeholder="Descreva os principais conhecimentos que você adquiriu..."
+                  />
+                </div>
+
+                {/* Sugestões de Melhoria */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Sugestões para melhorar este conteúdo
+                  </label>
+                  <textarea
+                    value={currentEvaluation.suggestions}
+                    onChange={(e) => setCurrentEvaluation(prev => ({ ...prev, suggestions: e.target.value }))}
+                    rows="3"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    placeholder="Como podemos melhorar este vídeo? (opcional)"
+                  />
+                </div>
+
+                {/* Recomendação */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    Você recomendaria este vídeo para outros colegas? *
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="wouldRecommend"
+                        value="true"
+                        checked={currentEvaluation.wouldRecommend === true}
+                        onChange={() => setCurrentEvaluation(prev => ({ ...prev, wouldRecommend: true }))}
+                        className="text-green-600 focus:ring-green-500 dark:focus:ring-green-400"
+                      />
+                      <span className="ml-2 text-gray-700 dark:text-gray-300">Sim, definitivamente recomendaria</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="wouldRecommend"
+                        value="false"
+                        checked={currentEvaluation.wouldRecommend === false}
+                        onChange={() => setCurrentEvaluation(prev => ({ ...prev, wouldRecommend: false }))}
+                        className="text-red-600 focus:ring-red-500 dark:focus:ring-red-400"
+                      />
+                      <span className="ml-2 text-gray-700 dark:text-gray-300">Não recomendaria</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Botões */}
+                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-600">
+                  <button
+                    type="button"
+                    onClick={closeEvaluationModal}
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Pular Avaliação
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center"
+                  >
+                    <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                    Enviar Avaliação
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Theme Settings Modal */}
       {showThemeSettings && (
