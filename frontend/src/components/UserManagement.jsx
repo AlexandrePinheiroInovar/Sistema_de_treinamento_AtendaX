@@ -14,11 +14,13 @@ const UserManagement = () => {
     email: '',
     password: '',
     role: 'user',
-    department: ''
+    department: '',
+    company: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterDepartment, setFilterDepartment] = useState('');
+  const [filterCompany, setFilterCompany] = useState('');
   const [showThemeSettings, setShowThemeSettings] = useState(false);
 
   // Verificar permissões
@@ -74,7 +76,7 @@ const UserManagement = () => {
     }
 
     // Limpar formulário
-    setFormData({ name: '', email: '', password: '', role: 'user', department: '' });
+    setFormData({ name: '', email: '', password: '', role: 'user', department: '', company: '' });
     setEditingUser(null);
     setShowModal(false);
   };
@@ -86,7 +88,8 @@ const UserManagement = () => {
       email: user.email,
       password: '',
       role: user.role,
-      department: user.department || ''
+      department: user.department || '',
+      company: user.company || ''
     });
     setShowModal(true);
   };
@@ -105,7 +108,9 @@ const UserManagement = () => {
     const matchesRole = filterRole === 'all' || user.role === filterRole;
     const matchesDepartment = !filterDepartment ||
                              (user.department && user.department.toLowerCase().includes(filterDepartment.toLowerCase()));
-    return matchesSearch && matchesRole && matchesDepartment;
+    const matchesCompany = !filterCompany ||
+                          (user.company && user.company.toLowerCase().includes(filterCompany.toLowerCase()));
+    return matchesSearch && matchesRole && matchesDepartment && matchesCompany;
   });
 
   const currentUser = getCurrentUser();
@@ -154,7 +159,7 @@ const UserManagement = () => {
               <button
                 onClick={() => {
                   setEditingUser(null);
-                  setFormData({ name: '', email: '', password: '', role: 'user', department: '' });
+                  setFormData({ name: '', email: '', password: '', role: 'user', department: '', company: '' });
                   setShowModal(true);
                 }}
                 className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 flex items-center"
@@ -170,8 +175,8 @@ const UserManagement = () => {
 
         {/* Filtros */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Buscar</label>
               <input
                 type="text"
@@ -193,6 +198,16 @@ const UserManagement = () => {
                 <option value="supervisor">Supervisor</option>
                 <option value="user">Usuário</option>
               </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Filtrar por Empresa</label>
+              <input
+                type="text"
+                value={filterCompany}
+                onChange={(e) => setFilterCompany(e.target.value)}
+                placeholder="Ex: AtendaX, Acme..."
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Filtrar por Setor</label>
@@ -223,7 +238,10 @@ const UserManagement = () => {
                     Cargo
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Setor/Empresa
+                    Empresa
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Setor
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Data de Criação
@@ -261,6 +279,9 @@ const UserManagement = () => {
                         {user.role === 'admin' ? 'Administrador' :
                          user.role === 'supervisor' ? 'Supervisor' : 'Usuário'}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 dark:text-white">{user.company || 'Não informado'}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 dark:text-white">{user.department || 'Não informado'}</div>
@@ -350,7 +371,21 @@ const UserManagement = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Setor/Empresa
+                    Empresa
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.company}
+                    onChange={(e) => setFormData({...formData, company: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="Ex: AtendaX, Acme Corp, TechSoft"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Setor
                   </label>
                   <input
                     type="text"
@@ -384,7 +419,7 @@ const UserManagement = () => {
                     onClick={() => {
                       setShowModal(false);
                       setEditingUser(null);
-                      setFormData({ name: '', email: '', password: '', role: 'user', department: '' });
+                      setFormData({ name: '', email: '', password: '', role: 'user', department: '', company: '' });
                     }}
                     className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 py-2 px-4 rounded-lg font-medium transition-all duration-300"
                   >
