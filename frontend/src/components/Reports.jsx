@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/SimpleAuthContext';
+import ThemeSettings from './ThemeSettings';
 
 const Reports = () => {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ const Reports = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('30'); // dias
   const [selectedModule, setSelectedModule] = useState('all');
   const [selectedReport, setSelectedReport] = useState('progress'); // progress, engagement, admin
+  const [showThemeSettings, setShowThemeSettings] = useState(false);
 
   // Dados mockados para demonstração
   const [reportData] = useState({
@@ -186,11 +188,11 @@ const Reports = () => {
       <>
         {/* KPIs Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total de Usuários</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total de Usuários</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</p>
               </div>
               <div className="bg-blue-100 p-3 rounded-full">
                 <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,10 +202,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Concluídos</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Concluídos</p>
                 <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
               </div>
               <div className="bg-green-100 p-3 rounded-full">
@@ -214,10 +216,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Em Progresso</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Em Progresso</p>
                 <p className="text-2xl font-bold text-yellow-600">{stats.inProgress}</p>
               </div>
               <div className="bg-yellow-100 p-3 rounded-full">
@@ -228,10 +230,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Não Iniciados</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Não Iniciados</p>
                 <p className="text-2xl font-bold text-red-600">{stats.notStarted}</p>
               </div>
               <div className="bg-red-100 p-3 rounded-full">
@@ -244,8 +246,8 @@ const Reports = () => {
         </div>
 
         {/* Progress Chart */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Progresso por Módulo</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Progresso por Módulo</h3>
           <div className="space-y-4">
             {reportData.progressByModule.map((module, index) => {
               const total = module.completed + module.inProgress + module.notStarted;
@@ -255,10 +257,10 @@ const Reports = () => {
               return (
                 <div key={index} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-700">{module.module}</span>
-                    <span className="text-sm text-gray-500">{total} usuários</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{module.module}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{total} usuários</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-4 flex overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-4 flex overflow-hidden">
                     <div
                       className="bg-green-500 h-4 transition-all duration-300"
                       style={{ width: `${completedPercentage}%` }}
@@ -270,7 +272,7 @@ const Reports = () => {
                       title={`${module.inProgress} em progresso`}
                     ></div>
                   </div>
-                  <div className="flex justify-between text-xs text-gray-500">
+                  <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
                     <span>✅ {module.completed} concluídos</span>
                     <span>⏳ {module.inProgress} em progresso</span>
                     <span>⭕ {module.notStarted} não iniciados</span>
@@ -282,59 +284,59 @@ const Reports = () => {
         </div>
 
         {/* Detailed Table */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900">Detalhamento por Usuário</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Detalhamento por Usuário</h3>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Usuário
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Módulo
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Progresso
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Tempo (min)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Certificado
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
                 {getFilteredData().map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 dark:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {user.module}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-16 bg-gray-200 rounded-full h-2 mr-3">
+                        <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-3">
                           <div
                             className="bg-blue-600 h-2 rounded-full"
                             style={{ width: `${user.progress}%` }}
                           ></div>
                         </div>
-                        <span className="text-sm text-gray-900">{user.progress}%</span>
+                        <span className="text-sm text-gray-900 dark:text-white">{user.progress}%</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {user.timeSpent}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -348,7 +350,7 @@ const Reports = () => {
                         {user.progress === 100 ? 'Concluído' : user.progress > 0 ? 'Em Progresso' : 'Não Iniciado'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {user.certificate ? (
                         <span className="text-green-600">✅ Emitido</span>
                       ) : (
@@ -371,10 +373,10 @@ const Reports = () => {
       <>
         {/* KPIs de Engagement */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Vídeos Mais Assistidos</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Vídeos Mais Assistidos</p>
                 <p className="text-2xl font-bold text-purple-600">{reportData.engagement.mostWatchedVideos.length}</p>
               </div>
               <div className="bg-purple-100 p-3 rounded-full">
@@ -385,10 +387,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Taxa Média de Conclusão</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Taxa Média de Conclusão</p>
                 <p className="text-2xl font-bold text-green-600">
                   {Math.round(reportData.engagement.mostWatchedVideos.reduce((sum, video) => sum + video.completionRate, 0) / reportData.engagement.mostWatchedVideos.length)}%
                 </p>
@@ -401,10 +403,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Comentários Totais</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Comentários Totais</p>
                 <p className="text-2xl font-bold text-blue-600">
                   {reportData.engagement.comments.reduce((sum, video) => sum + video.comments, 0)}
                 </p>
@@ -417,10 +419,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Avaliação Média</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Avaliação Média</p>
                 <p className="text-2xl font-bold text-yellow-600">
                   {(reportData.engagement.comments.reduce((sum, video) => sum + video.avgRating, 0) / reportData.engagement.comments.length).toFixed(1)}
                 </p>
@@ -435,32 +437,32 @@ const Reports = () => {
         </div>
 
         {/* Vídeos Mais Assistidos */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Vídeos Mais Assistidos</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Vídeos Mais Assistidos</h3>
           <div className="space-y-4">
             {reportData.engagement.mostWatchedVideos.map((video, index) => (
-              <div key={video.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={video.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="flex items-center space-x-4">
                   <div className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
                     {index + 1}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">{video.title}</h4>
-                    <p className="text-sm text-gray-600">{video.module}</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white">{video.title}</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">{video.module}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-6 text-sm">
                   <div className="text-center">
-                    <p className="font-semibold text-gray-900">{video.views}</p>
-                    <p className="text-gray-500">Visualizações</p>
+                    <p className="font-semibold text-gray-900 dark:text-white">{video.views}</p>
+                    <p className="text-gray-500 dark:text-gray-400">Visualizações</p>
                   </div>
                   <div className="text-center">
-                    <p className="font-semibold text-gray-900">{video.avgWatchTime}min</p>
-                    <p className="text-gray-500">Tempo Médio</p>
+                    <p className="font-semibold text-gray-900 dark:text-white">{video.avgWatchTime}min</p>
+                    <p className="text-gray-500 dark:text-gray-400">Tempo Médio</p>
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-green-600">{video.completionRate}%</p>
-                    <p className="text-gray-500">Conclusão</p>
+                    <p className="text-gray-500 dark:text-gray-400">Conclusão</p>
                   </div>
                 </div>
               </div>
@@ -469,16 +471,16 @@ const Reports = () => {
         </div>
 
         {/* Taxa de Abandono */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Taxa de Abandono por Módulo</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Taxa de Abandono por Módulo</h3>
           <div className="space-y-4">
             {reportData.engagement.dropoffRates.map((module, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-700">{module.module}</span>
-                  <span className="text-sm text-gray-500">{module.totalUsers} usuários iniciaram</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{module.module}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{module.totalUsers} usuários iniciaram</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-4 flex overflow-hidden">
+                <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-4 flex overflow-hidden">
                   <div
                     className="bg-red-500 h-4 transition-all duration-300"
                     style={{ width: `${module.dropoffRate}%` }}
@@ -490,7 +492,7 @@ const Reports = () => {
                     title={`${module.totalUsers - module.dropoffs} concluíram`}
                   ></div>
                 </div>
-                <div className="flex justify-between text-xs text-gray-500">
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
                   <span>❌ {module.dropoffs} abandonaram ({module.dropoffRate}%)</span>
                   <span>✅ {module.totalUsers - module.dropoffs} concluíram ({100 - module.dropoffRate}%)</span>
                 </div>
@@ -500,8 +502,8 @@ const Reports = () => {
         </div>
 
         {/* Horários de Pico */}
-        <div className="bg-white rounded-2xl shadow-xl p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Horários de Maior Engajamento</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Horários de Maior Engajamento</h3>
           <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
             {reportData.engagement.peakHours.map((hour, index) => {
               const maxUsers = Math.max(...reportData.engagement.peakHours.map(h => h.users));
@@ -516,8 +518,8 @@ const Reports = () => {
                       title={`${hour.users} usuários às ${hour.hour}`}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-600">{hour.hour}</p>
-                  <p className="text-xs font-semibold text-gray-900">{hour.users}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300">{hour.hour}</p>
+                  <p className="text-xs font-semibold text-gray-900 dark:text-white">{hour.users}</p>
                 </div>
               );
             })}
@@ -533,10 +535,10 @@ const Reports = () => {
       <>
         {/* KPIs Administrativos */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Usuários Totais</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Usuários Totais</p>
                 <p className="text-2xl font-bold text-blue-600">{reportData.admin.systemStats.totalUsers}</p>
               </div>
               <div className="bg-blue-100 p-3 rounded-full">
@@ -547,10 +549,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Certificados Emitidos</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Certificados Emitidos</p>
                 <p className="text-2xl font-bold text-green-600">{reportData.admin.certificates.totalIssued}</p>
               </div>
               <div className="bg-green-100 p-3 rounded-full">
@@ -561,10 +563,10 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Uptime do Sistema</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Uptime do Sistema</p>
                 <p className="text-2xl font-bold text-purple-600">{reportData.admin.systemHealth.uptime}%</p>
               </div>
               <div className="bg-purple-100 p-3 rounded-full">
@@ -575,12 +577,12 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Armazenamento</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Armazenamento</p>
                 <p className="text-2xl font-bold text-orange-600">{reportData.admin.systemStats.usedStorage}GB</p>
-                <p className="text-xs text-gray-500">de {reportData.admin.systemStats.totalStorage}GB</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">de {reportData.admin.systemStats.totalStorage}GB</p>
               </div>
               <div className="bg-orange-100 p-3 rounded-full">
                 <svg className="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -592,17 +594,17 @@ const Reports = () => {
         </div>
 
         {/* Atividade do Sistema */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Atividade do Sistema (Últimos 7 dias)</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Atividade do Sistema (Últimos 7 dias)</h3>
           <div className="grid grid-cols-7 gap-4">
             {reportData.admin.userActivity.map((day, index) => (
               <div key={index} className="text-center">
-                <div className="bg-blue-50 rounded-lg p-3 mb-2">
-                  <p className="text-xs text-gray-600">{new Date(day.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</p>
+                <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-3 mb-2">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">{new Date(day.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</p>
                   <p className="text-lg font-bold text-blue-600">{day.logins}</p>
-                  <p className="text-xs text-gray-500">logins</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">logins</p>
                   <p className="text-sm font-semibold text-green-600 mt-1">+{day.newUsers}</p>
-                  <p className="text-xs text-gray-500">novos</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">novos</p>
                 </div>
               </div>
             ))}
@@ -613,27 +615,27 @@ const Reports = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
 
           {/* Saúde do Sistema */}
-          <div className="bg-white rounded-2xl shadow-xl p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Saúde do Sistema</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Saúde do Sistema</h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Tempo de Resposta Médio</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Tempo de Resposta Médio</span>
                 <span className="font-semibold text-green-600">{reportData.admin.systemHealth.avgResponseTime}ms</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Taxa de Erro</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Taxa de Erro</span>
                 <span className="font-semibold text-green-600">{reportData.admin.systemHealth.errorRate}%</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Último Backup</span>
-                <span className="font-semibold text-gray-900">{reportData.admin.systemHealth.lastBackup}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Último Backup</span>
+                <span className="font-semibold text-gray-900 dark:text-white">{reportData.admin.systemHealth.lastBackup}</span>
               </div>
               <div className="pt-4">
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-600">Uso de Armazenamento</span>
+                  <span className="text-gray-600 dark:text-gray-300">Uso de Armazenamento</span>
                   <span className="font-semibold">{Math.round((reportData.admin.systemStats.usedStorage / reportData.admin.systemStats.totalStorage) * 100)}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
                   <div
                     className="bg-orange-500 h-3 rounded-full transition-all duration-300"
                     style={{ width: `${(reportData.admin.systemStats.usedStorage / reportData.admin.systemStats.totalStorage) * 100}%` }}
@@ -644,14 +646,14 @@ const Reports = () => {
           </div>
 
           {/* Certificados por Módulo */}
-          <div className="bg-white rounded-2xl shadow-xl p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Certificados por Módulo</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Certificados por Módulo</h3>
             <div className="space-y-4">
               {reportData.admin.certificates.byModule.map((module, index) => (
                 <div key={index} className="flex justify-between items-center">
-                  <span className="text-sm text-gray-700">{module.module}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">{module.module}</span>
                   <div className="flex items-center space-x-3">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                       <div
                         className="bg-green-500 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${(module.issued / Math.max(...reportData.admin.certificates.byModule.map(m => m.issued))) * 100}%` }}
@@ -666,34 +668,34 @@ const Reports = () => {
         </div>
 
         {/* Top Usuários */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900">Top Usuários por Performance</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Top Usuários por Performance</h3>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Posição
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Usuário
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Módulos Completos
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Tempo Total (min)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Certificados
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
                 {reportData.admin.topUsers.map((user, index) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 dark:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
@@ -704,12 +706,12 @@ const Reports = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {user.modulesCompleted}/4
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {user.totalTime}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -728,11 +730,23 @@ const Reports = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
 
+        {/* Theme Settings Button */}
+        <button
+          onClick={() => setShowThemeSettings(true)}
+          className="fixed top-4 right-4 z-10 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition-all duration-300"
+          title="Configurações de Tema"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
               <div className="bg-purple-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
@@ -741,8 +755,8 @@ const Reports = () => {
                 </svg>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Relatórios de Treinamento</h1>
-                <p className="text-gray-600">Acompanhe o progresso e performance da equipe</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white dark:text-white">Relatórios de Treinamento</h1>
+                <p className="text-gray-600 dark:text-gray-300 dark:text-gray-300">Acompanhe o progresso e performance da equipe</p>
               </div>
             </div>
 
@@ -779,16 +793,16 @@ const Reports = () => {
 
           {/* Sidebar com Filtros */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Filtros</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Filtros</h3>
 
               {/* Período */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Período</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Período</label>
                 <select
                   value={selectedPeriod}
                   onChange={(e) => setSelectedPeriod(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
                   <option value="7">Últimos 7 dias</option>
                   <option value="30">Últimos 30 dias</option>
@@ -799,11 +813,11 @@ const Reports = () => {
 
               {/* Módulo */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Módulo AtendaX</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Módulo AtendaX</label>
                 <select
                   value={selectedModule}
                   onChange={(e) => setSelectedModule(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
                   {modules.map(module => (
                     <option key={module.value} value={module.value}>{module.label}</option>
@@ -813,7 +827,7 @@ const Reports = () => {
 
               {/* Tipo de Relatório */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Relatório</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Relatório</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input
@@ -823,7 +837,7 @@ const Reports = () => {
                       onChange={(e) => setSelectedReport(e.target.value)}
                       className="mr-2"
                     />
-                    <span className="text-sm">Progresso de Treinamento</span>
+                    <span className="text-sm text-gray-900 dark:text-white">Progresso de Treinamento</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -833,7 +847,7 @@ const Reports = () => {
                       onChange={(e) => setSelectedReport(e.target.value)}
                       className="mr-2"
                     />
-                    <span className="text-sm">Engagement</span>
+                    <span className="text-sm text-gray-900 dark:text-white">Engagement</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -843,26 +857,26 @@ const Reports = () => {
                       onChange={(e) => setSelectedReport(e.target.value)}
                       className="mr-2"
                     />
-                    <span className="text-sm">Administrativo</span>
+                    <span className="text-sm text-gray-900 dark:text-white">Administrativo</span>
                   </label>
                 </div>
               </div>
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h4 className="font-semibold text-gray-900 mb-4">Resumo Rápido</h4>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+              <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Resumo Rápido</h4>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Usuários Ativos:</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Usuários Ativos:</span>
                   <span className="font-semibold text-green-600">{reportData.activeUsers}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Taxa de Conclusão:</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Taxa de Conclusão:</span>
                   <span className="font-semibold text-blue-600">{Math.round((stats.completed / stats.total) * 100)}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Progresso Médio:</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Progresso Médio:</span>
                   <span className="font-semibold text-purple-600">{Math.round(stats.avgProgress)}%</span>
                 </div>
               </div>
@@ -877,6 +891,11 @@ const Reports = () => {
           </div>
         </div>
       </div>
+
+      {/* Theme Settings Modal */}
+      {showThemeSettings && (
+        <ThemeSettings onClose={() => setShowThemeSettings(false)} />
+      )}
     </div>
   );
 };

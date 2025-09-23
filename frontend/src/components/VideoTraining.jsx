@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/SimpleAuthContext';
+import ThemeSettings from './ThemeSettings';
 
 const VideoTraining = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const VideoTraining = () => {
   const [videoDuration, setVideoDuration] = useState(300);
   const [videoPositions, setVideoPositions] = useState({});
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
+  const [showThemeSettings, setShowThemeSettings] = useState(false);
 
   // Dados mockados de vídeos (em um sistema real, viria da API)
   const [videos] = useState([
@@ -419,35 +421,47 @@ const VideoTraining = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
 
+        {/* Theme Settings Button */}
+        <button
+          onClick={() => setShowThemeSettings(true)}
+          className="fixed top-4 right-4 z-40 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+          title="Configurações de Tema"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
+              <div className="bg-blue-600 dark:bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
                 <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10"/>
                   <polygon points="10,8 16,12 10,16 10,8"/>
                 </svg>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Vídeos de Treinamento</h1>
-                <p className="text-gray-600">Desenvolva suas habilidades com nossos cursos em vídeo</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Vídeos de Treinamento</h1>
+                <p className="text-gray-600 dark:text-gray-300">Desenvolva suas habilidades com nossos cursos em vídeo</p>
               </div>
             </div>
 
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowFAQ(!showFAQ)}
-                className="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white py-2 px-4 rounded-lg font-medium transition-all duration-300"
+                className="border border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white py-2 px-4 rounded-lg font-medium transition-all duration-300"
               >
                 Dúvidas Frequentes
               </button>
               <button
                 onClick={() => setShowAddVideoModal(true)}
-                className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 flex items-center"
+                className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 flex items-center"
               >
                 <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -456,7 +470,7 @@ const VideoTraining = () => {
               </button>
               <button
                 onClick={() => navigate('/dashboard')}
-                className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300"
+                className="bg-gray-600 hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300"
               >
                 Voltar
               </button>
@@ -468,28 +482,28 @@ const VideoTraining = () => {
 
           {/* Sidebar com Filtros */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Filtros</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Filtros</h3>
 
               {/* Busca */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Buscar</label>
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Buscar vídeos..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 />
               </div>
 
               {/* Módulo AtendaX */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Módulo AtendaX</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Módulo AtendaX</label>
                 <select
                   value={selectedModule}
                   onChange={(e) => setSelectedModule(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="all">Todos os Módulos</option>
                   <option value="cadastro-cliente">Cadastro de Cliente</option>
@@ -502,20 +516,20 @@ const VideoTraining = () => {
               </div>
 
               {/* Estatísticas do Usuário */}
-              <div className="bg-blue-50 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-2">Seu Progresso</h4>
+              <div className="bg-blue-50 dark:bg-gray-700 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Seu Progresso</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Vídeos Assistidos:</span>
-                    <span className="font-semibold">{Object.keys(videoProgress).filter(id => videoProgress[id] >= 95).length}</span>
+                    <span className="text-gray-700 dark:text-gray-300">Vídeos Assistidos:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{Object.keys(videoProgress).filter(id => videoProgress[id] >= 95).length}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Total de Vídeos:</span>
-                    <span className="font-semibold">{videos.length}</span>
+                    <span className="text-gray-700 dark:text-gray-300">Total de Vídeos:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{videos.length}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Progresso Geral:</span>
-                    <span className="font-semibold">
+                    <span className="text-gray-700 dark:text-gray-300">Progresso Geral:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">
                       {Math.round((Object.keys(videoProgress).filter(id => videoProgress[id] >= 95).length / videos.length) * 100)}%
                     </span>
                   </div>
@@ -525,8 +539,8 @@ const VideoTraining = () => {
 
             {/* FAQ Sidebar */}
             {showFAQ && (
-              <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                   <svg className="h-5 w-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -534,9 +548,9 @@ const VideoTraining = () => {
                 </h3>
                 <div className="space-y-4">
                   {faqData.map((faq, index) => (
-                    <div key={index} className="border-b border-gray-200 pb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">{faq.question}</h4>
-                      <p className="text-gray-600 text-sm">{faq.answer}</p>
+                    <div key={index} className="border-b border-gray-200 dark:border-gray-600 pb-4">
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2 text-sm">{faq.question}</h4>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">{faq.answer}</p>
                     </div>
                   ))}
                 </div>
@@ -551,10 +565,10 @@ const VideoTraining = () => {
             {selectedVideo && (
               <div className="space-y-6">
                 {/* Player Principal */}
-                <div className="bg-white rounded-2xl shadow-xl p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
                   <div className="aspect-w-16 aspect-h-9 mb-4 relative">
                     {/* Player do YouTube com API JavaScript */}
-                    <div className="w-full h-96 bg-gray-900 rounded-lg overflow-hidden">
+                    <div className="w-full h-96 bg-gray-900 dark:bg-gray-950 rounded-lg overflow-hidden">
                       <div
                         id={`youtube-player-${selectedVideo.id}`}
                         className="w-full h-full"
@@ -564,9 +578,9 @@ const VideoTraining = () => {
 
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-2">{selectedVideo.title}</h2>
-                      <p className="text-gray-600 mb-3">{selectedVideo.description}</p>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{selectedVideo.title}</h2>
+                      <p className="text-gray-600 dark:text-gray-300 mb-3">{selectedVideo.description}</p>
+                      <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
                         <span>Por {selectedVideo.instructor}</span>
                         <span>•</span>
                         <span>{selectedVideo.duration}</span>
@@ -577,7 +591,7 @@ const VideoTraining = () => {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => setSelectedVideo(null)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+                        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
                       >
                         <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
@@ -588,13 +602,13 @@ const VideoTraining = () => {
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="bg-gray-200 rounded-full h-2 mb-4">
+                  <div className="bg-gray-200 dark:bg-gray-600 rounded-full h-2 mb-4">
                     <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${Math.round(videoProgress[selectedVideo.id] || 0)}%` }}
                     ></div>
                   </div>
-                  <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
+                  <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-300 mb-2">
                     <span>Progresso: {Math.round(videoProgress[selectedVideo.id] || 0)}% completo</span>
                     <span>
                       {Math.floor(currentVideoTime / 60)}:
@@ -602,12 +616,12 @@ const VideoTraining = () => {
                       {Math.floor(videoDuration / 60)}:{String(Math.floor(videoDuration % 60)).padStart(2, '0')}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-xs text-gray-500 mb-2">
+                  <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
                     <span>
                       {isVideoPlaying ? '▶️ Contando progresso - vídeo tocando' : '⏸️ Pausado - progresso parado'}
                     </span>
                     {getSavedVideoPosition(selectedVideo.id) > 0 && (
-                      <span className="text-blue-600 font-medium">
+                      <span className="text-blue-600 dark:text-blue-400 font-medium">
                         📍 Última posição: {Math.floor(getSavedVideoPosition(selectedVideo.id) / 60)}:
                         {String(Math.floor(getSavedVideoPosition(selectedVideo.id) % 60)).padStart(2, '0')}
                       </span>
@@ -616,21 +630,21 @@ const VideoTraining = () => {
                 </div>
 
                 {/* Seção de Comentários/Dúvidas */}
-                <div className="bg-white rounded-2xl shadow-xl p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center">
                       <svg className="h-6 w-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
-                      <h3 className="text-lg font-bold text-gray-900">Dúvidas e Comentários</h3>
-                      <span className="ml-3 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white">Dúvidas e Comentários</h3>
+                      <span className="ml-3 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm">
                         {(videoComments[selectedVideo.id] || []).length} comentários
                       </span>
                     </div>
 
                     <button
                       onClick={() => setSelectedVideo(null)}
-                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center text-sm"
+                      className="bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-lg transition-colors flex items-center text-sm"
                     >
                       <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -640,9 +654,9 @@ const VideoTraining = () => {
                   </div>
 
                   {/* Formulário para Novo Comentário */}
-                  <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 mb-6">
+                  <div className="border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg p-4 mb-6">
                     <div className="flex items-start space-x-3">
-                      <div className="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -653,16 +667,16 @@ const VideoTraining = () => {
                           onChange={(e) => setNewComment(e.target.value)}
                           placeholder="Escreva sua dúvida ou comentário sobre este vídeo..."
                           rows="3"
-                          className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                          className="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         />
                         <div className="flex justify-between items-center mt-3">
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
                             Comentando como {userData?.name || 'Usuário'}
                           </span>
                           <button
                             onClick={addComment}
                             disabled={!newComment.trim()}
-                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+                            className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
                           >
                             <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -681,14 +695,14 @@ const VideoTraining = () => {
                         <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
-                        <p className="text-gray-500">Ainda não há comentários neste vídeo</p>
-                        <p className="text-gray-400 text-sm mt-1">Seja o primeiro a comentar!</p>
+                        <p className="text-gray-500 dark:text-gray-400">Ainda não há comentários neste vídeo</p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Seja o primeiro a comentar!</p>
                       </div>
                     ) : (
                       (videoComments[selectedVideo.id] || []).map((comment) => (
-                        <div key={comment.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                        <div key={comment.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                           <div className="flex items-start space-x-3">
-                            <div className="bg-gray-100 text-gray-600 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div className="bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
                               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                               </svg>
@@ -696,17 +710,17 @@ const VideoTraining = () => {
                             <div className="flex-1">
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center space-x-2">
-                                  <span className="font-semibold text-gray-900">{comment.author}</span>
-                                  <span className="text-gray-500 text-sm">{comment.timestamp}</span>
+                                  <span className="font-semibold text-gray-900 dark:text-white">{comment.author}</span>
+                                  <span className="text-gray-500 dark:text-gray-400 text-sm">{comment.timestamp}</span>
                                   {comment.editedAt && (
-                                    <span className="text-gray-400 text-xs">(editado em {comment.editedAt})</span>
+                                    <span className="text-gray-400 dark:text-gray-500 text-xs">(editado em {comment.editedAt})</span>
                                   )}
                                 </div>
                                 {canEditOrDeleteComment(comment) && (
                                   <div className="flex items-center space-x-2">
                                     <button
                                       onClick={() => startEditComment(comment)}
-                                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium"
                                       title="Editar comentário"
                                     >
                                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -719,7 +733,7 @@ const VideoTraining = () => {
                                           deleteComment(comment.id);
                                         }
                                       }}
-                                      className="text-red-600 hover:text-red-800 text-sm font-medium"
+                                      className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm font-medium"
                                       title="Excluir comentário"
                                     >
                                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -735,7 +749,7 @@ const VideoTraining = () => {
                                   <textarea
                                     value={editCommentText}
                                     onChange={(e) => setEditCommentText(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     rows="3"
                                     placeholder="Edite seu comentário..."
                                   />
@@ -743,20 +757,20 @@ const VideoTraining = () => {
                                     <button
                                       onClick={saveEditComment}
                                       disabled={!editCommentText.trim()}
-                                      className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors"
+                                      className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors"
                                     >
                                       Salvar
                                     </button>
                                     <button
                                       onClick={cancelEditComment}
-                                      className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors"
+                                      className="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors"
                                     >
                                       Cancelar
                                     </button>
                                   </div>
                                 </div>
                               ) : (
-                                <p className="text-gray-700 leading-relaxed">{comment.text}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{comment.text}</p>
                               )}
                             </div>
                           </div>
@@ -772,7 +786,7 @@ const VideoTraining = () => {
             {!selectedVideo && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredVideos.map((video) => (
-                <div key={video.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div key={video.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
 
                   {/* Thumbnail */}
                   <div className="relative">
@@ -784,7 +798,7 @@ const VideoTraining = () => {
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                       <button
                         onClick={() => setSelectedVideo(video)}
-                        className="bg-white text-blue-600 rounded-full p-3 hover:bg-blue-50 transition-colors"
+                        className="bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 rounded-full p-3 hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
                       >
                         <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <polygon points="10,8 16,12 10,16 10,8"/>
@@ -807,8 +821,8 @@ const VideoTraining = () => {
 
                   {/* Content */}
                   <div className="p-4">
-                    <h3 className="font-bold text-gray-900 mb-2 text-sm">{video.title}</h3>
-                    <p className="text-gray-600 text-xs mb-3 line-clamp-2">{video.description}</p>
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-2 text-sm">{video.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-xs mb-3 line-clamp-2">{video.description}</p>
 
                     <div className="flex items-center justify-between mb-3">
                       <span className={`text-xs px-2 py-1 rounded-full ${
@@ -822,11 +836,11 @@ const VideoTraining = () => {
                         <svg className="h-4 w-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
-                        <span className="text-xs text-gray-600">{video.rating}</span>
+                        <span className="text-xs text-gray-600 dark:text-gray-300">{video.rating}</span>
                       </div>
                     </div>
 
-                    <p className="text-xs text-gray-500">Por {video.instructor}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Por {video.instructor}</p>
                   </div>
                 </div>
                 ))}
@@ -838,7 +852,7 @@ const VideoTraining = () => {
                 <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-                <p className="text-gray-500">Nenhum vídeo encontrado</p>
+                <p className="text-gray-500 dark:text-gray-400">Nenhum vídeo encontrado</p>
               </div>
             )}
           </div>
@@ -847,13 +861,13 @@ const VideoTraining = () => {
         {/* Modal para Adicionar Vídeo */}
         {showAddVideoModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900">Adicionar Novo Vídeo</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Adicionar Novo Vídeo</h3>
                   <button
                     onClick={() => setShowAddVideoModal(false)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
                   >
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -864,7 +878,7 @@ const VideoTraining = () => {
                 <form onSubmit={handleAddVideo} className="space-y-4">
                   {/* Título */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Título do Vídeo *
                     </label>
                     <input
@@ -873,14 +887,14 @@ const VideoTraining = () => {
                       value={newVideoForm.title}
                       onChange={handleNewVideoChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       placeholder="Ex: Como cadastrar um novo cliente"
                     />
                   </div>
 
                   {/* Descrição */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Descrição *
                     </label>
                     <textarea
@@ -889,14 +903,14 @@ const VideoTraining = () => {
                       onChange={handleNewVideoChange}
                       required
                       rows="3"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       placeholder="Descreva o conteúdo do vídeo..."
                     />
                   </div>
 
                   {/* URL do YouTube */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       URL do YouTube *
                     </label>
                     <input
@@ -905,10 +919,10 @@ const VideoTraining = () => {
                       value={newVideoForm.youtubeUrl}
                       onChange={handleNewVideoChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       placeholder="https://www.youtube.com/watch?v=..."
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       Cole o link completo do vídeo no YouTube
                     </p>
                   </div>
@@ -916,7 +930,7 @@ const VideoTraining = () => {
                   {/* Módulo e Nível - Grid 2 colunas */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Módulo AtendaX *
                       </label>
                       <select
@@ -924,7 +938,7 @@ const VideoTraining = () => {
                         value={newVideoForm.module}
                         onChange={handleNewVideoChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         <option value="cadastro-cliente">Cadastro de Cliente</option>
                         <option value="vendas">Vendas</option>
@@ -936,7 +950,7 @@ const VideoTraining = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Nível de Dificuldade *
                       </label>
                       <select
@@ -944,7 +958,7 @@ const VideoTraining = () => {
                         value={newVideoForm.level}
                         onChange={handleNewVideoChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         <option value="Iniciante">Iniciante</option>
                         <option value="Intermediário">Intermediário</option>
@@ -955,7 +969,7 @@ const VideoTraining = () => {
 
                   {/* Instrutor */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Instrutor *
                     </label>
                     <input
@@ -964,23 +978,23 @@ const VideoTraining = () => {
                       value={newVideoForm.instructor}
                       onChange={handleNewVideoChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       placeholder="Nome do instrutor"
                     />
                   </div>
 
                   {/* Botões */}
-                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-600">
                     <button
                       type="button"
                       onClick={() => setShowAddVideoModal(false)}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                       Cancelar
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors"
                     >
                       Adicionar Vídeo
                     </button>
@@ -992,6 +1006,15 @@ const VideoTraining = () => {
         )}
 
       </div>
+
+      {/* Theme Settings Modal */}
+      {showThemeSettings && (
+        <ThemeSettings
+          isOpen={showThemeSettings}
+          onClose={() => setShowThemeSettings(false)}
+        />
+      )}
+
     </div>
   );
 };

@@ -1,0 +1,169 @@
+/* Estilos para diferentes modos de acessibilidade */
+
+/* Tamanhos de fonte */
+[data-font-size="small"] {
+  font-size: 14px;
+}
+
+[data-font-size="normal"] {
+  font-size: 16px;
+}
+
+[data-font-size="large"] {
+  font-size: 18px;
+}
+
+[data-font-size="extra-large"] {
+  font-size: 20px;
+}
+
+/* Modos de daltonismo - Protanopia/Deuteranopia */
+[data-colorblind="protanopia"] .bg-red-500,
+[data-colorblind="protanopia"] .bg-red-600,
+[data-colorblind="protanopia"] .bg-red-700,
+[data-colorblind="deuteranopia"] .bg-red-500,
+[data-colorblind="deuteranopia"] .bg-red-600,
+[data-colorblind="deuteranopia"] .bg-red-700 {
+  background-color: #ea580c !important; /* orange-600 */
+}
+
+[data-colorblind="protanopia"] .bg-green-500,
+[data-colorblind="protanopia"] .bg-green-600,
+[data-colorblind="protanopia"] .bg-green-700,
+[data-colorblind="deuteranopia"] .bg-green-500,
+[data-colorblind="deuteranopia"] .bg-green-600,
+[data-colorblind="deuteranopia"] .bg-green-700 {
+  background-color: #2563eb !important; /* blue-600 */
+}
+
+[data-colorblind="protanopia"] .text-red-500,
+[data-colorblind="protanopia"] .text-red-600,
+[data-colorblind="protanopia"] .text-red-700,
+[data-colorblind="deuteranopia"] .text-red-500,
+[data-colorblind="deuteranopia"] .text-red-600,
+[data-colorblind="deuteranopia"] .text-red-700 {
+  color: #ea580c !important; /* orange-600 */
+}
+
+[data-colorblind="protanopia"] .text-green-500,
+[data-colorblind="protanopia"] .text-green-600,
+[data-colorblind="protanopia"] .text-green-700,
+[data-colorblind="deuteranopia"] .text-green-500,
+[data-colorblind="deuteranopia"] .text-green-600,
+[data-colorblind="deuteranopia"] .text-green-700 {
+  color: #2563eb !important; /* blue-600 */
+}
+
+/* Tritanopia */
+[data-colorblind="tritanopia"] .bg-blue-500,
+[data-colorblind="tritanopia"] .bg-blue-600,
+[data-colorblind="tritanopia"] .bg-blue-700 {
+  background-color: #ec4899 !important; /* pink-500 */
+}
+
+[data-colorblind="tritanopia"] .bg-yellow-500,
+[data-colorblind="tritanopia"] .bg-yellow-600,
+[data-colorblind="tritanopia"] .bg-yellow-700 {
+  background-color: #ec4899 !important; /* pink-500 */
+}
+
+[data-colorblind="tritanopia"] .text-blue-500,
+[data-colorblind="tritanopia"] .text-blue-600,
+[data-colorblind="tritanopia"] .text-blue-700 {
+  color: #ec4899 !important; /* pink-500 */
+}
+
+[data-colorblind="tritanopia"] .text-yellow-500,
+[data-colorblind="tritanopia"] .text-yellow-600,
+[data-colorblind="tritanopia"] .text-yellow-700 {
+  color: #ec4899 !important; /* pink-500 */
+}
+
+/* Alto contraste */
+[data-colorblind="highContrast"] {
+  filter: contrast(150%) saturate(200%);
+}
+
+[data-colorblind="highContrast"] .bg-gray-50 {
+  background-color: #ffffff !important;
+}
+
+[data-colorblind="highContrast"] .bg-gray-100 {
+  background-color: #f8fafc !important;
+}
+
+[data-colorblind="highContrast"] .text-gray-600 {
+  color: #1f2937 !important;
+}
+
+[data-colorblind="highContrast"] .text-gray-500 {
+  color: #374151 !important;
+}
+
+/* Transições suaves para mudanças de tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Focus mais visível para acessibilidade */
+.focus-visible:focus {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Indicadores visuais para daltonismo */
+[data-colorblind="protanopia"] .status-success::before,
+[data-colorblind="deuteranopia"] .status-success::before {
+  content: "✓ ";
+  font-weight: bold;
+}
+
+[data-colorblind="protanopia"] .status-error::before,
+[data-colorblind="deuteranopia"] .status-error::before {
+  content: "✗ ";
+  font-weight: bold;
+}
+
+[data-colorblind="tritanopia"] .status-info::before {
+  content: "ℹ ";
+  font-weight: bold;
+}
+
+[data-colorblind="tritanopia"] .status-warning::before {
+  content: "⚠ ";
+  font-weight: bold;
+}
+
+/* Melhor legibilidade no modo escuro */
+.dark {
+  color-scheme: dark;
+}
+
+.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Animações reduzidas para usuários sensíveis */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  * {
+    background: white !important;
+    color: black !important;
+  }
+}
