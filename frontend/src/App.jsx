@@ -15,6 +15,7 @@ import VideoTraining from './components/VideoTraining';
 import Certification from './components/Certification';
 import Reports from './components/Reports';
 import ThemeSettings from './components/ThemeSettings';
+import MainDashboard from './components/MainDashboard';
 
 // Páginas
 function HomePage() {
@@ -591,6 +592,11 @@ function DashboardPage() {
             <p className="text-gray-600 dark:text-gray-300 text-sm">Visualizar métricas e estatísticas</p>
           </div>
 
+        </div>
+
+        {/* Dashboard Específico do Usuário */}
+        <div className="mt-8">
+          <MainDashboard />
         </div>
 
         {/* Theme Settings Modal */}
