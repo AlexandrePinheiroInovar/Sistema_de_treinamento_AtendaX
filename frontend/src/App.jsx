@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import backgroundImage from './assets/image/1_backgroundAtendax.jpg';
 
 // Styles
 import './styles/accessibility.css';
@@ -171,7 +172,20 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12 px-4">
+    <div className="h-screen relative flex items-center justify-center px-4 overflow-hidden">
+      {/* Background Image with Blur Effect */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'blur(3px)',
+          transform: 'scale(1.1)'
+        }}
+      ></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-blue-800/40"></div>
 
       {/* Theme Settings Button */}
       <div className="fixed top-4 right-4 z-50">
@@ -190,21 +204,21 @@ function LoginPage() {
         </button>
       </div>
 
-      <div className="max-w-md w-full space-y-8">
+      <div className="relative max-w-md w-full space-y-8 z-10">
 
         {/* Header */}
         <div className="text-center">
-          <div className="bg-blue-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <div className="bg-blue-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl border-4 border-white/20">
             <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
               <circle cx="12" cy="12" r="10"/>
               <polygon points="10,8 16,12 10,16 10,8"/>
             </svg>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
             Acesso ao Sistema
           </h2>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-white/90 drop-shadow">
             Sistema de Treinamento AtendaX
           </p>
         </div>

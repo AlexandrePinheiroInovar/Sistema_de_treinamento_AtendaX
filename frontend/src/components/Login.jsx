@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/SimpleAuthContext';
+import backgroundImage from '../assets/image/1_backgroundAtendax.jpg';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -42,28 +43,40 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      {/* Background Image with Blur Effect */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 scale-110"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'blur(3px)'
+        }}
+      ></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-blue-800/40"></div>
+      <div className="relative max-w-md w-full space-y-8 z-10">
 
         {/* Header */}
         <div className="text-center">
-          <div className="bg-blue-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <div className="bg-blue-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl border-4 border-white/20">
             <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
               <circle cx="12" cy="12" r="10"/>
               <polygon points="10,8 16,12 10,16 10,8"/>
             </svg>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
             Acesso ao Sistema
           </h2>
-          <p className="text-gray-600">
+          <p className="text-white/90 drop-shadow">
             Sistema de Treinamento AtendaX
           </p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white/98 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/30">
           {error && (
             <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
               <div className="flex items-center">
@@ -185,7 +198,7 @@ const Login = () => {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-gray-500 text-sm">
+          <p className="text-white/80 text-sm drop-shadow">
             © 2024 AtendaX - Sistema de Treinamento
           </p>
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PlayCircle, Mail, Lock, AlertCircle, Eye, EyeOff } from '../components/Icons';
+import backgroundImage from '../assets/image/1_backgroundAtendax.jpg';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -58,25 +59,37 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      {/* Background Image with Blur Effect */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 scale-110"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'blur(3px)'
+        }}
+      ></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-blue-800/40"></div>
+      <div className="relative max-w-md w-full space-y-8 z-10">
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="bg-primary-600 text-white p-3 rounded-xl">
+            <div className="bg-blue-600 text-white p-3 rounded-xl shadow-2xl border-4 border-white/20">
               <PlayCircle className="h-12 w-12" />
             </div>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold text-white drop-shadow-lg">
             Sistema de Treinamento
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-white/90 drop-shadow">
             AtendaX - Faça login para acessar os treinamentos
           </p>
         </div>
 
         {/* Form */}
-        <div className="bg-white py-8 px-6 shadow-lg rounded-xl">
+        <div className="bg-white/98 backdrop-blur-lg py-8 px-6 shadow-2xl rounded-xl border border-white/30">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Mensagem de erro */}
             {error && (
@@ -178,8 +191,8 @@ const Login = () => {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-xs text-gray-500">
-            © 2024 AtendaX. Todos os direitos reservados.
+          <p className="text-xs text-white/80 drop-shadow">
+            © 2025 AtendaX. Todos os direitos reservados.
           </p>
         </div>
       </div>
