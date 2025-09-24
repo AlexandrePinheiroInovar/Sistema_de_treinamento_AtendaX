@@ -430,9 +430,9 @@ function LoginPage() {
             <div className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 dark:text-white mb-3">Credenciais de Teste:</h4>
               <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                <div><strong>Admin:</strong> admin@atendax.com / admin123</div>
-                <div><strong>Supervisor:</strong> supervisor@atendax.com / super123</div>
-                <div><strong>Usuário:</strong> usuario@atendax.com / user123</div>
+                <div><strong>Admin:</strong> admin@prismx.com / admin123</div>
+                <div><strong>Supervisor:</strong> supervisor@prismx.com / super123</div>
+                <div><strong>Usuário:</strong> usuario@prismx.com / user123</div>
               </div>
             </div>
           </div>
