@@ -113,6 +113,35 @@ export const AuthProvider = ({ children }) => {
     return hasRole('admin');
   };
 
+  const changePassword = async (currentPassword, newPassword) => {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      throw new Error('Usuário não autenticado');
+    }
+
+    // Simular delay de API
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Encontrar o usuário na lista mockada
+    const userIndex = mockUsers.findIndex(u => u.id === currentUser.id);
+    if (userIndex === -1) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    const userInDB = mockUsers[userIndex];
+
+    // Verificar se a senha atual está correta
+    if (userInDB.password !== currentPassword) {
+      throw new Error('Senha atual incorreta');
+    }
+
+    // Atualizar a senha no array mockado (em uma aplicação real, seria uma chamada de API)
+    mockUsers[userIndex] = { ...userInDB, password: newPassword };
+
+    // A sessão do usuário não precisa ser alterada, apenas a senha no "banco de dados"
+    return true;
+  };
+
   const userData = getCurrentUser();
 
   const value = {
@@ -124,7 +153,8 @@ export const AuthProvider = ({ children }) => {
     hasRole,
     canManageUsers,
     isAdmin,
-    getCurrentUser
+    getCurrentUser,
+    changePassword
   };
 
   return (
