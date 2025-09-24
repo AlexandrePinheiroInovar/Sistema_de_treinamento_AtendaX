@@ -18,21 +18,21 @@ export const AuthProvider = ({ children }) => {
   const mockUsers = [
     {
       id: '1',
-      email: 'admin@atendax.com',
+      email: 'admin@prismx.com',
       password: 'admin123',
-      name: 'Administrador AtendaX',
+      name: 'Administrador PrismX',
       role: 'admin'
     },
     {
       id: '2',
-      email: 'supervisor@atendax.com',
+      email: 'supervisor@prismx.com',
       password: 'super123',
-      name: 'Supervisor AtendaX',
+      name: 'Supervisor PrismX',
       role: 'supervisor'
     },
     {
       id: '3',
-      email: 'usuario@atendax.com',
+      email: 'usuario@prismx.com',
       password: 'user123',
       name: 'Usuário Comum',
       role: 'user'

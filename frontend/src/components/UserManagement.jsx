@@ -42,9 +42,9 @@ const UserManagement = () => {
     } else {
       // Inicializar com usuários padrão
       const defaultUsers = [
-        { id: '1', name: 'Administrador AtendaX', email: 'admin@atendax.com', role: 'admin', department: 'TI - Tecnologia', createdAt: new Date().toISOString() },
-        { id: '2', name: 'Supervisor AtendaX', email: 'supervisor@atendax.com', role: 'supervisor', department: 'Operações', createdAt: new Date().toISOString() },
-        { id: '3', name: 'Usuário Comum', email: 'usuario@atendax.com', role: 'user', department: 'Atendimento', createdAt: new Date().toISOString() }
+        { id: '1', name: 'Administrador PrismX', email: 'admin@prismx.com', role: 'admin', department: 'TI - Tecnologia', createdAt: new Date().toISOString() },
+        { id: '2', name: 'Supervisor PrismX', email: 'supervisor@prismx.com', role: 'supervisor', department: 'Operações', createdAt: new Date().toISOString() },
+        { id: '3', name: 'Usuário Comum', email: 'usuario@prismx.com', role: 'user', department: 'Atendimento', createdAt: new Date().toISOString() }
       ];
       setUsers(defaultUsers);
       localStorage.setItem('atendax_all_users', JSON.stringify(defaultUsers));
@@ -205,7 +205,7 @@ const UserManagement = () => {
                 type="text"
                 value={filterCompany}
                 onChange={(e) => setFilterCompany(e.target.value)}
-                placeholder="Ex: AtendaX, Acme..."
+                placeholder="Ex: PrismX, Acme..."
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               />
             </div>
@@ -379,7 +379,7 @@ const UserManagement = () => {
                     value={formData.company}
                     onChange={(e) => setFormData({...formData, company: e.target.value})}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="Ex: AtendaX, Acme Corp, TechSoft"
+                    placeholder="Ex: PrismX, Acme Corp, TechSoft"
                   />
                 </div>
 

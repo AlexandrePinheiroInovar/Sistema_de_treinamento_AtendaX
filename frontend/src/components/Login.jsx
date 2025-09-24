@@ -71,7 +71,7 @@ const Login = () => {
             Acesso ao Sistema
           </h2>
           <p className="text-white/90 drop-shadow">
-            Sistema de Treinamento AtendaX
+            Sistema de Treinamento PrismX
           </p>
         </div>
 
@@ -181,15 +181,15 @@ const Login = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Admin:</span>
-                  <span className="font-mono text-gray-800">admin@atendax.com / admin123</span>
+                  <span className="font-mono text-gray-800">admin@prismx.com / admin123</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Supervisor:</span>
-                  <span className="font-mono text-gray-800">supervisor@atendax.com / super123</span>
+                  <span className="font-mono text-gray-800">supervisor@prismx.com / super123</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Usuário:</span>
-                  <span className="font-mono text-gray-800">usuario@atendax.com / user123</span>
+                  <span className="font-mono text-gray-800">usuario@prismx.com / user123</span>
                 </div>
               </div>
             </div>
@@ -199,7 +199,7 @@ const Login = () => {
         {/* Footer */}
         <div className="text-center">
           <p className="text-white/80 text-sm drop-shadow">
-            © 2024 AtendaX - Sistema de Treinamento
+            © 2024 PrismX - Sistema de Treinamento
           </p>
         </div>
       </div>

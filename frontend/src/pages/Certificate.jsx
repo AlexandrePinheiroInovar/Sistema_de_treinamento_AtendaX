@@ -76,7 +76,7 @@ const Certificate = () => {
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
       // Nome do arquivo com data
-      const fileName = `certificado-atendax-${userData?.name?.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.pdf`;
+      const fileName = `certificado-prismx-${userData?.name?.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.pdf`;
 
       pdf.save(fileName);
     } catch (error) {
@@ -255,7 +255,7 @@ const Certificate = () => {
             </h2>
 
             <p className="text-lg text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
-              concluiu com êxito o <strong>Sistema de Treinamento AtendaX</strong>,
+              concluiu com êxito o <strong>Sistema de Treinamento PrismX</strong>,
               demonstrando dedicação e comprometimento no desenvolvimento de suas competências profissionais.
             </p>
           </div>
@@ -298,7 +298,7 @@ const Certificate = () => {
           {/* Footer */}
           <div className="border-t border-gray-300 pt-8">
             <div className="text-center mb-6">
-              <div className="text-2xl font-bold text-primary-800 mb-2">AtendaX</div>
+              <div className="text-2xl font-bold text-primary-800 mb-2">PrismX</div>
               <p className="text-sm text-gray-600">Sistema de Treinamento Profissional</p>
             </div>
 
@@ -329,7 +329,7 @@ const Certificate = () => {
           <CheckCircle className="h-5 w-5 text-blue-600 mr-2" />
           <div className="text-sm text-blue-800">
             <strong>Certificado válido:</strong> Este certificado comprova a conclusão do treinamento
-            AtendaX em {formatDate(certificate?.completedAt)}.
+            PrismX em {formatDate(certificate?.completedAt)}.
             O documento é gerado automaticamente pelo sistema e possui validade integral.
           </div>
         </div>

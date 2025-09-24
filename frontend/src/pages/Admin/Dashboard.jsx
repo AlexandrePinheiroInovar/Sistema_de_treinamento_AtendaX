@@ -66,7 +66,7 @@ const AdminDashboard = () => {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard Administrativo</h1>
           <p className="mt-2 text-gray-600">
-            Visão geral do sistema de treinamento AtendaX
+            Visão geral do sistema de treinamento PrismX
           </p>
         </div>
         <div className="mt-4 sm:mt-0 flex space-x-3">

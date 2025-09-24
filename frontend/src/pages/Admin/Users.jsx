@@ -67,7 +67,7 @@ const AdminUsers = () => {
       setNewUser({ name: '', email: '', role: 'user' });
       setShowCreateModal(false);
 
-      alert('Usuário criado com sucesso! Senha padrão: AtendaX2024!');
+      alert('Usuário criado com sucesso! Senha padrão: PrismX2024!');
     } catch (error) {
       console.error('Erro ao criar usuário:', error);
       alert('Erro ao criar usuário: ' + error.message);
@@ -371,7 +371,7 @@ const AdminUsers = () => {
               {/* Info */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <p className="text-sm text-blue-800">
-                  <strong>Senha padrão:</strong> AtendaX2024! <br />
+                  <strong>Senha padrão:</strong> PrismX2024! <br />
                   O usuário deve alterar a senha no primeiro acesso.
                 </p>
               </div>

@@ -24,7 +24,7 @@ const Certification = () => {
 
     try {
       // Criar certificado visual simples
-      const certificateId = `ATENDAX-${video.id}-${Date.now()}`;
+      const certificateId = `PRISMX-${video.id}-${Date.now()}`;
       const completedDate = new Date(video.completedAt).toLocaleDateString('pt-BR');
 
       // Marcar certificado como gerado
@@ -146,7 +146,7 @@ const Certification = () => {
         </head>
         <body>
           <div class="certificate">
-            <div class="logo">ATENDAX</div>
+            <div class="logo">PRISMX</div>
             <h1>CERTIFICADO DE CONCLUSÃO</h1>
             <p style="font-size: 18px; margin: 20px 0;">Certificamos que</p>
             <div class="student-name">${certificateData.userName}</div>
@@ -169,8 +169,8 @@ const Certification = () => {
             </div>
 
             <div class="signature">
-              Certificado gerado digitalmente pelo Sistema AtendaX<br>
-              <strong>AtendaX - Sistema de Treinamento</strong>
+              Certificado gerado digitalmente pelo Sistema PrismX<br>
+              <strong>PrismX - Sistema de Treinamento</strong>
             </div>
 
             <div class="certificate-id">

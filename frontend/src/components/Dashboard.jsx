@@ -34,7 +34,7 @@ const Dashboard = () => {
                 </svg>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard AtendaX</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Dashboard PrismX</h1>
                 <p className="text-gray-600">
                   Bem-vindo, <span className="font-semibold">{userData?.name || 'Usuário'}</span>
                   {userData?.role && (
@@ -159,7 +159,7 @@ const Dashboard = () => {
                 </svg>
                 <div className="text-sm text-blue-800">
                   <p className="font-medium">Login realizado com sucesso!</p>
-                  <p>Você está conectado ao Sistema de Treinamento AtendaX.</p>
+                  <p>Você está conectado ao Sistema de Treinamento PrismX.</p>
                 </div>
               </div>
             </div>

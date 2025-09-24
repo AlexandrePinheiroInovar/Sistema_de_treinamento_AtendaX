@@ -84,7 +84,7 @@ const Login = () => {
             Sistema de Treinamento
           </h2>
           <p className="mt-2 text-sm text-white/90 drop-shadow">
-            AtendaX - Faça login para acessar os treinamentos
+            PrismX - Faça login para acessar os treinamentos
           </p>
         </div>
 
@@ -192,7 +192,7 @@ const Login = () => {
         {/* Footer */}
         <div className="text-center">
           <p className="text-xs text-white/80 drop-shadow">
-            © 2025 AtendaX. Todos os direitos reservados.
+            © 2025 PrismX. Todos os direitos reservados.
           </p>
         </div>
       </div>

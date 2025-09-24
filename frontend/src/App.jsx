@@ -56,7 +56,7 @@ function HomePage() {
 
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
               Sistema de Treinamento
-              <span className="text-blue-600 dark:text-blue-400 block">AtendaX</span>
+              <span className="text-blue-600 dark:text-blue-400 block">PrismX</span>
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
@@ -137,7 +137,7 @@ function HomePage() {
 
           {/* Footer */}
           <div className="text-center mt-16">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">© 2025 AtendaX - Sistema de Treinamento</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">© 2025 PrismX - Sistema de Treinamento</p>
           </div>
 
           {/* About System Modal */}
@@ -154,7 +154,7 @@ function HomePage() {
                       </svg>
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Sobre o Sistema AtendaX</h2>
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Sobre o Sistema PrismX</h2>
                       <p className="text-gray-600 dark:text-gray-300">Plataforma de Treinamento Corporativo</p>
                     </div>
                   </div>
@@ -176,10 +176,10 @@ function HomePage() {
                       <svg className="h-6 w-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      O que é o AtendaX?
+                      O que é o PrismX?
                     </h3>
                     <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-                      O Sistema de Treinamento AtendaX é uma plataforma moderna e completa para gerenciamento de treinamentos corporativos,
+                      O Sistema de Treinamento PrismX é uma plataforma moderna e completa para gerenciamento de treinamentos corporativos,
                       desenvolvida com foco na experiência do usuário e controle rigoroso de progresso. Oferecemos uma solução inovadora
                       que combina tecnologia avançada com facilidade de uso.
                     </p>
@@ -367,7 +367,7 @@ function LoginPage() {
             Acesso ao Sistema
           </h2>
           <p className="text-white/90 drop-shadow">
-            Sistema de Treinamento AtendaX
+            Sistema de Treinamento PrismX
           </p>
         </div>
 
@@ -492,7 +492,7 @@ function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard AtendaX</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard PrismX</h1>
                 <p className="text-gray-600 dark:text-gray-300">
                   Bem-vindo, <span className="font-semibold">{user?.name}</span>
                   <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${

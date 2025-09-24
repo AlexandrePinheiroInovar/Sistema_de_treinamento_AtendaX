@@ -52,7 +52,7 @@ const Reports = () => {
     // Dados de Engagement
     engagement: {
       mostWatchedVideos: [
-        { id: 1, title: 'Introdução ao AtendaX', module: 'Cadastro de Cliente', views: 145, avgWatchTime: 8.2, completionRate: 92 },
+        { id: 1, title: 'Introdução ao PrismX', module: 'Cadastro de Cliente', views: 145, avgWatchTime: 8.2, completionRate: 92 },
         { id: 2, title: 'Processo de Vendas', module: 'Vendas', views: 132, avgWatchTime: 12.5, completionRate: 87 },
         { id: 3, title: 'Comunicação Efetiva', module: 'Comunicação', views: 128, avgWatchTime: 9.8, completionRate: 89 },
         { id: 4, title: 'Gestão de Perfis', module: 'Gestão de Usuários', views: 98, avgWatchTime: 7.3, completionRate: 76 },
@@ -78,7 +78,7 @@ const Reports = () => {
       ],
 
       comments: [
-        { videoId: 1, videoTitle: 'Introdução ao AtendaX', comments: 23, avgRating: 4.5 },
+        { videoId: 1, videoTitle: 'Introdução ao PrismX', comments: 23, avgRating: 4.5 },
         { videoId: 2, videoTitle: 'Processo de Vendas', comments: 31, avgRating: 4.2 },
         { videoId: 3, videoTitle: 'Comunicação Efetiva', comments: 18, avgRating: 4.7 },
         { videoId: 4, videoTitle: 'Gestão de Perfis', comments: 15, avgRating: 3.9 },
@@ -813,7 +813,7 @@ const Reports = () => {
 
               {/* Módulo */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Módulo AtendaX</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Módulo PrismX</label>
                 <select
                   value={selectedModule}
                   onChange={(e) => setSelectedModule(e.target.value)}

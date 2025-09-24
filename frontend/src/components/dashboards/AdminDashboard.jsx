@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 import { BarChart, PieChart, LineChart, MetricCard } from '../charts/SimpleCharts';
 import {
@@ -19,6 +19,7 @@ import {
 
 const AdminDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Mock data for admin dashboard
   const stats = {
@@ -57,7 +58,7 @@ const AdminDashboard = () => {
       description: 'Gerenciar usuários, permissões e departamentos',
       icon: <Users className="h-6 w-6" />,
       color: 'blue',
-      path: '/admin/users'
+      path: '/users'
     },
     {
       title: 'Vídeos de Treinamento',
@@ -71,14 +72,14 @@ const AdminDashboard = () => {
       description: 'Configurar e gerenciar certificados',
       icon: <Award className="h-6 w-6" />,
       color: 'green',
-      path: '/admin/certificates'
+      path: '/certifications'
     },
     {
       title: 'Relatórios',
       description: 'Analytics e relatórios detalhados',
       icon: <FileText className="h-6 w-6" />,
       color: 'orange',
-      path: '/admin/reports'
+      path: '/reports'
     }
   ];
 
@@ -92,7 +93,7 @@ const AdminDashboard = () => {
               Dashboard Administrativo
             </h1>
             <p className="text-blue-100">
-              Bem-vindo, {user?.name} • Sistema AtendaX
+              Bem-vindo, {user?.name} • Sistema PrismX
             </p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
@@ -109,6 +110,7 @@ const AdminDashboard = () => {
           icon={<Users className="h-6 w-6" />}
           color="blue"
           change={8}
+          onClick={() => navigate('/users')}
         />
         <MetricCard
           title="Vídeos Publicados"
@@ -116,6 +118,7 @@ const AdminDashboard = () => {
           icon={<PlayCircle className="h-6 w-6" />}
           color="purple"
           change={12}
+          onClick={() => navigate('/videos')}
         />
         <MetricCard
           title="Certificados Emitidos"
@@ -123,6 +126,7 @@ const AdminDashboard = () => {
           icon={<Award className="h-6 w-6" />}
           color="green"
           change={5}
+          onClick={() => navigate('/certifications')}
         />
         <MetricCard
           title="Acessos no Mês"
@@ -130,6 +134,7 @@ const AdminDashboard = () => {
           icon={<TrendingUp className="h-6 w-6" />}
           color="orange"
           change={15}
+          onClick={() => navigate('/reports')}
         />
       </div>
 
@@ -231,21 +236,21 @@ const AdminDashboard = () => {
       {/* Quick Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
         <Link
-          to="/admin/users/new"
+          to="/users"
           className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-medium text-center transition-colors duration-200 flex items-center justify-center space-x-2"
         >
           <Users className="h-5 w-5" />
-          <span>Adicionar Usuário</span>
+          <span>Gerenciar Usuários</span>
         </Link>
         <Link
-          to="/videos/new"
+          to="/videos"
           className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-xl font-medium text-center transition-colors duration-200 flex items-center justify-center space-x-2"
         >
           <PlayCircle className="h-5 w-5" />
-          <span>Novo Vídeo</span>
+          <span>Gerenciar Vídeos</span>
         </Link>
         <Link
-          to="/admin/reports"
+          to="/reports"
           className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 px-6 rounded-xl font-medium text-center transition-colors duration-200 flex items-center justify-center space-x-2"
         >
           <FileText className="h-5 w-5" />

@@ -113,14 +113,14 @@ export const LineChart = ({ data, title, className = "" }) => {
   const range = maxValue - minValue || 1;
 
   return (
-    <div className={`p-4 ${className}`}>
+    <div className={`p-6 ${className}`}>
       {title && (
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
           {title}
         </h3>
       )}
-      <div className="h-40 relative">
-        <svg className="w-full h-full" viewBox="0 0 400 160">
+      <div className="h-64 relative">
+        <svg className="w-full h-full" viewBox="0 0 600 240">
           <defs>
             <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3"/>
@@ -128,21 +128,69 @@ export const LineChart = ({ data, title, className = "" }) => {
             </linearGradient>
           </defs>
 
+          {/* Y-axis labels */}
+          <g className="text-gray-500 dark:text-gray-400">
+            {[0, 1, 2, 3, 4].map(i => {
+              const value = Math.round(minValue + (range / 4) * (4 - i));
+              return (
+                <text
+                  key={i}
+                  x="35"
+                  y={30 + (i * 40) + 5}
+                  textAnchor="end"
+                  className="text-xs fill-current"
+                >
+                  {value}
+                </text>
+              );
+            })}
+          </g>
+
           {/* Grid lines */}
-          <g className="text-gray-400 dark:text-gray-500">
+          <g className="text-gray-300 dark:text-gray-600">
             {[0, 1, 2, 3, 4].map(i => (
               <line
                 key={i}
-                x1="40"
-                y1={20 + (i * 30)}
-                x2="380"
-                y2={20 + (i * 30)}
+                x1="50"
+                y1={30 + (i * 40)}
+                x2="580"
+                y2={30 + (i * 40)}
                 stroke="currentColor"
                 strokeWidth="1"
-                opacity="0.3"
+                opacity="0.5"
               />
             ))}
+            {/* Vertical grid lines */}
+            {data.map((_, index) => {
+              const x = 50 + (index * (530 / (data.length - 1)));
+              return (
+                <line
+                  key={index}
+                  x1={x}
+                  y1="30"
+                  x2={x}
+                  y2="190"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  opacity="0.3"
+                />
+              );
+            })}
           </g>
+
+          {/* Area under line */}
+          <polygon
+            fill="url(#lineGradient)"
+            points={[
+              ...data.map((item, index) => {
+                const x = 50 + (index * (530 / (data.length - 1)));
+                const y = 190 - ((item.value - minValue) / range) * 160;
+                return `${x},${y}`;
+              }),
+              `${50 + ((data.length - 1) * (530 / (data.length - 1)))},190`,
+              `50,190`
+            ].join(' ')}
+          />
 
           {/* Line */}
           <polyline
@@ -152,55 +200,51 @@ export const LineChart = ({ data, title, className = "" }) => {
             strokeLinecap="round"
             strokeLinejoin="round"
             points={data.map((item, index) => {
-              const x = 40 + (index * (340 / (data.length - 1)));
-              const y = 140 - ((item.value - minValue) / range) * 120;
+              const x = 50 + (index * (530 / (data.length - 1)));
+              const y = 190 - ((item.value - minValue) / range) * 160;
               return `${x},${y}`;
             }).join(' ')}
-            className="animate-pulse"
+            className="transition-all duration-1000"
           />
 
-          {/* Area under line */}
-          <polygon
-            fill="url(#lineGradient)"
-            points={[
-              ...data.map((item, index) => {
-                const x = 40 + (index * (340 / (data.length - 1)));
-                const y = 140 - ((item.value - minValue) / range) * 120;
-                return `${x},${y}`;
-              }),
-              `${40 + ((data.length - 1) * (340 / (data.length - 1)))},140`,
-              `40,140`
-            ].join(' ')}
-          />
-
-          {/* Points */}
+          {/* Points with values */}
           {data.map((item, index) => {
-            const x = 40 + (index * (340 / (data.length - 1)));
-            const y = 140 - ((item.value - minValue) / range) * 120;
+            const x = 50 + (index * (530 / (data.length - 1)));
+            const y = 190 - ((item.value - minValue) / range) * 160;
             return (
-              <circle
-                key={index}
-                cx={x}
-                cy={y}
-                r="4"
-                fill="#3b82f6"
-                stroke="white"
-                strokeWidth="2"
-                className="hover:r-6 transition-all duration-200"
-              />
+              <g key={index}>
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="5"
+                  fill="#3b82f6"
+                  stroke="white"
+                  strokeWidth="2"
+                  className="hover:r-7 transition-all duration-200"
+                />
+                {/* Value labels above points */}
+                <text
+                  x={x}
+                  y={y - 10}
+                  textAnchor="middle"
+                  className="text-xs font-medium fill-gray-700 dark:fill-gray-300"
+                >
+                  {item.value}
+                </text>
+              </g>
             );
           })}
 
-          {/* Labels */}
+          {/* X-axis labels */}
           {data.map((item, index) => {
-            const x = 40 + (index * (340 / (data.length - 1)));
+            const x = 50 + (index * (530 / (data.length - 1)));
             return (
               <text
                 key={index}
                 x={x}
-                y="155"
+                y="210"
                 textAnchor="middle"
-                className="text-xs fill-gray-600 dark:fill-gray-400"
+                className="text-sm font-medium fill-gray-600 dark:fill-gray-400"
               >
                 {item.label}
               </text>
@@ -212,7 +256,7 @@ export const LineChart = ({ data, title, className = "" }) => {
   );
 };
 
-export const MetricCard = ({ title, value, icon, color = "blue", change, className = "" }) => {
+export const MetricCard = ({ title, value, icon, color = "blue", change, className = "", onClick, href }) => {
   const colorClasses = {
     blue: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
     green: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400",
@@ -221,28 +265,45 @@ export const MetricCard = ({ title, value, icon, color = "blue", change, classNa
     red: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
   };
 
-  return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 ${className}`}>
-      <div className="flex items-center">
-        <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
-          {icon}
-        </div>
-        <div className="ml-4 flex-1">
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-            {title}
-          </p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {value}
-          </p>
-          {change && (
-            <p className={`text-sm font-medium mt-1 ${
-              change > 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              {change > 0 ? '+' : ''}{change}%
-            </p>
-          )}
-        </div>
+  const baseClassName = `bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 ${className}`;
+  const clickableClassName = onClick || href ?
+    `${baseClassName} cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-105 hover:border-gray-300 dark:hover:border-gray-600` :
+    baseClassName;
+
+  const CardContent = () => (
+    <div className="flex items-center">
+      <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
+        {icon}
       </div>
+      <div className="ml-4 flex-1">
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          {title}
+        </p>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+          {value}
+        </p>
+        {change && (
+          <p className={`text-sm font-medium mt-1 ${
+            change > 0 ? 'text-green-600' : 'text-red-600'
+          }`}>
+            {change > 0 ? '+' : ''}{change}%
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <a href={href} className={clickableClassName}>
+        <CardContent />
+      </a>
+    );
+  }
+
+  return (
+    <div className={clickableClassName} onClick={onClick}>
+      <CardContent />
     </div>
   );
 };

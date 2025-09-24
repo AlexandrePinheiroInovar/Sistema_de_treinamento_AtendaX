@@ -102,7 +102,7 @@ const Dashboard = () => {
           Bem-vindo, {userData?.name}!
         </h1>
         <p className="text-primary-100">
-          Continue seu treinamento no Sistema AtendaX
+          Continue seu treinamento no Sistema PrismX
         </p>
       </div>
 

@@ -595,7 +595,7 @@ const VideoTraining = () => {
 
               {/* Módulo AtendaX */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Módulo AtendaX</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Módulo PrismX</label>
                 <select
                   value={selectedModule}
                   onChange={(e) => setSelectedModule(e.target.value)}
@@ -1041,7 +1041,7 @@ const VideoTraining = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Módulo AtendaX *
+                        Módulo PrismX *
                       </label>
                       <select
                         name="module"
