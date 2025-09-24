@@ -20,6 +20,7 @@ import ThemeSettings from './components/ThemeSettings';
 function HomePage() {
   const navigate = useNavigate();
   const [showThemeSettings, setShowThemeSettings] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -125,15 +126,161 @@ function HomePage() {
             >
               Acessar Sistema
             </button>
-            <button className="border-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 py-4 px-8 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+            <button
+              onClick={() => setShowAboutModal(true)}
+              className="border-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 py-4 px-8 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
               Sobre o Sistema
             </button>
           </div>
 
           {/* Footer */}
           <div className="text-center mt-16">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">© 2024 AtendaX - Sistema de Treinamento</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">© 2025 AtendaX - Sistema de Treinamento</p>
           </div>
+
+          {/* About System Modal */}
+          {showAboutModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                {/* Header */}
+                <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+                  <div className="flex items-center">
+                    <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                      <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="10,8 16,12 10,16 10,8"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Sobre o Sistema AtendaX</h2>
+                      <p className="text-gray-600 dark:text-gray-300">Plataforma de Treinamento Corporativo</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowAboutModal(false)}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Content */}
+                <div className="px-6 py-6">
+                  {/* Introduction */}
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                      <svg className="h-6 w-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      O que é o AtendaX?
+                    </h3>
+                    <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                      O Sistema de Treinamento AtendaX é uma plataforma moderna e completa para gerenciamento de treinamentos corporativos,
+                      desenvolvida com foco na experiência do usuário e controle rigoroso de progresso. Oferecemos uma solução inovadora
+                      que combina tecnologia avançada com facilidade de uso.
+                    </p>
+                  </div>
+
+                  {/* Features Grid */}
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
+                    {/* Security */}
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-xl border border-green-200 dark:border-green-700">
+                      <div className="flex items-center mb-3">
+                        <div className="bg-green-600 text-white w-10 h-10 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          </svg>
+                        </div>
+                        <h4 className="font-bold text-green-800 dark:text-green-300">Sistema Anti-Cheat</h4>
+                      </div>
+                      <p className="text-green-700 dark:text-green-400 text-sm">
+                        Monitoramento avançado que detecta tentativas de burla, garantindo a integridade do processo de aprendizagem.
+                      </p>
+                    </div>
+
+                    {/* Certificates */}
+                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-xl border border-purple-200 dark:border-purple-700">
+                      <div className="flex items-center mb-3">
+                        <div className="bg-purple-600 text-white w-10 h-10 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                          </svg>
+                        </div>
+                        <h4 className="font-bold text-purple-800 dark:text-purple-300">Certificação Automática</h4>
+                      </div>
+                      <p className="text-purple-700 dark:text-purple-400 text-sm">
+                        Geração automática de certificados profissionais em PDF após conclusão completa dos treinamentos.
+                      </p>
+                    </div>
+
+                    {/* Management */}
+                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-xl border border-blue-200 dark:border-blue-700">
+                      <div className="flex items-center mb-3">
+                        <div className="bg-blue-600 text-white w-10 h-10 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                        </div>
+                        <h4 className="font-bold text-blue-800 dark:text-blue-300">Gestão Completa</h4>
+                      </div>
+                      <p className="text-blue-700 dark:text-blue-400 text-sm">
+                        Controle total de usuários, departamentos e conteúdos com diferentes níveis de permissão.
+                      </p>
+                    </div>
+
+                    {/* Accessibility */}
+                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-xl border border-orange-200 dark:border-orange-700">
+                      <div className="flex items-center mb-3">
+                        <div className="bg-orange-600 text-white w-10 h-10 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </div>
+                        <h4 className="font-bold text-orange-800 dark:text-orange-300">Acessibilidade</h4>
+                      </div>
+                      <p className="text-orange-700 dark:text-orange-400 text-sm">
+                        Interface adaptativa com suporte para daltonismo, modo escuro e navegação por teclado.
+                      </p>
+                    </div>
+                  </div>
+
+
+                  {/* Developer */}
+                  <div className="text-center bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Desenvolvido por</h3>
+                    <p className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-1">Yan Mendes Matos</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Desenvolvedor Full Stack especializado em soluções corporativas</p>
+                  </div>
+                </div>
+
+                {/* Footer Actions */}
+                <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-700 px-6 py-4 flex flex-col sm:flex-row gap-3 justify-center rounded-b-2xl border-t border-gray-200 dark:border-gray-600">
+                  <button
+                    onClick={() => {
+                      setShowAboutModal(false);
+                      navigate('/login');
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
+                  >
+                    <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Fazer Login
+                  </button>
+                  <button
+                    onClick={() => setShowAboutModal(false)}
+                    className="border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 py-3 px-6 rounded-lg font-medium transition-all duration-300"
+                  >
+                    Voltar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Theme Settings Modal */}
           <ThemeSettings
