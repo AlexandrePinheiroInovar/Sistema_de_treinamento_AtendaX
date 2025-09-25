@@ -17,7 +17,7 @@ const VideoTraining = () => {
     title: '',
     description: '',
     youtubeUrl: '',
-    module: 'cadastro-cliente',
+    module: 'primeiro-acesso',
     level: 'Iniciante',
     instructor: ''
   });
@@ -50,7 +50,7 @@ const VideoTraining = () => {
       description: 'Aprenda os fundamentos essenciais para um atendimento de qualidade.',
       youtubeId: 'dQw4w9WgXcQ', // Exemplo - substitua pelos seus IDs reais
       duration: '15:30',
-      module: 'cadastro-cliente',
+      module: 'primeiro-acesso',
       thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
       level: 'Iniciante',
       instructor: 'Prof. Maria Silva',
@@ -361,7 +361,7 @@ const VideoTraining = () => {
       title: '',
       description: '',
       youtubeUrl: '',
-      module: 'cadastro-cliente',
+      module: 'primeiro-acesso',
       level: 'Iniciante',
       instructor: ''
     });
@@ -602,12 +602,12 @@ const VideoTraining = () => {
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="all">Todos os Módulos</option>
-                  <option value="cadastro-cliente">Cadastro de Cliente</option>
-                  <option value="vendas">Vendas</option>
-                  <option value="comunicacao">Comunicação</option>
-                  <option value="gestao-usuarios">Gestão de Usuários</option>
-                  <option value="relatorios">Relatórios</option>
-                  <option value="configuracoes">Configurações</option>
+                  <option value="primeiro-acesso">01 - Primeiro Acesso e Boas-vindas</option>
+                  <option value="introducao-plataforma">02 - Introdução à Plataforma</option>
+                  <option value="navegacao-painel">03 - Navegação no Painel Principal</option>
+                  <option value="modulo-atendimento">04 - Módulo de Atendimento</option>
+                  <option value="ferramentas-admin">05 - Ferramentas Administrativas</option>
+                  <option value="recursos-usuario">06 - Recursos do Usuário Final</option>
                 </select>
               </div>
 
@@ -1050,12 +1050,12 @@ const VideoTraining = () => {
                         required
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
-                        <option value="cadastro-cliente">Cadastro de Cliente</option>
-                        <option value="vendas">Vendas</option>
-                        <option value="comunicacao">Comunicação</option>
-                        <option value="gestao-usuarios">Gestão de Usuários</option>
-                        <option value="relatorios">Relatórios</option>
-                        <option value="configuracoes">Configurações</option>
+                        <option value="primeiro-acesso">01 - Primeiro Acesso e Boas-vindas</option>
+                        <option value="introducao-plataforma">02 - Introdução à Plataforma</option>
+                        <option value="navegacao-painel">03 - Navegação no Painel Principal</option>
+                        <option value="modulo-atendimento">04 - Módulo de Atendimento</option>
+                        <option value="ferramentas-admin">05 - Ferramentas Administrativas</option>
+                        <option value="recursos-usuario">06 - Recursos do Usuário Final</option>
                       </select>
                     </div>
 
