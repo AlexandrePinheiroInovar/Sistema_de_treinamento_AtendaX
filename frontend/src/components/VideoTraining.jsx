@@ -53,7 +53,7 @@ const VideoTraining = () => {
       module: 'primeiro-acesso',
       thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
       level: 'Iniciante',
-      instructor: 'Prof. Maria Silva',
+      instructor: 'Instrutora Maria Silva',
       views: 1250,
       rating: 4.8
     },
@@ -66,7 +66,7 @@ const VideoTraining = () => {
       module: 'vendas',
       thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
       level: 'Avançado',
-      instructor: 'Prof. João Santos',
+      instructor: 'Tutor João Santos',
       views: 980,
       rating: 4.9
     },
@@ -79,7 +79,7 @@ const VideoTraining = () => {
       module: 'comunicacao',
       thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
       level: 'Intermediário',
-      instructor: 'Prof. Ana Costa',
+      instructor: 'Especialista Ana Costa',
       views: 750,
       rating: 4.7
     },
@@ -92,7 +92,7 @@ const VideoTraining = () => {
       module: 'gestao-usuarios',
       thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
       level: 'Intermediário',
-      instructor: 'Prof. Carlos Lima',
+      instructor: 'Instrutor Carlos Lima',
       views: 620,
       rating: 4.6
     }
@@ -601,13 +601,48 @@ const VideoTraining = () => {
                   onChange={(e) => setSelectedModule(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
-                  <option value="all">Todos os Módulos</option>
-                  <option value="primeiro-acesso">01 - Primeiro Acesso e Boas-vindas</option>
-                  <option value="introducao-plataforma">02 - Introdução à Plataforma</option>
-                  <option value="navegacao-painel">03 - Navegação no Painel Principal</option>
-                  <option value="modulo-atendimento">04 - Módulo de Atendimento</option>
-                  <option value="ferramentas-admin">05 - Ferramentas Administrativas</option>
-                  <option value="recursos-usuario">06 - Recursos do Usuário Final</option>
+                  <option value="all">🎯 Todos os Módulos</option>
+
+                  {/* === INTRODUÇÃO === */}
+                  <optgroup label="🚀 INTRODUÇÃO">
+                    <option value="primeiro-acesso">🔑 Primeiro Acesso AtendaX</option>
+                    <option value="introducao-atendax">📋 Introdução AtendaX</option>
+                    <option value="explicando-painel">🖥️ Explicando Painel de Controle</option>
+                  </optgroup>
+
+                  {/* === GESTÃO DE USUÁRIOS === */}
+                  <optgroup label="👥 GESTÃO DE USUÁRIOS">
+                    <option value="modulo-usuarios">👤 Gerenciamento de Usuários</option>
+                    <option value="modulo-equipes">👪 Gestão de Equipes</option>
+                    <option value="recursos-usuario-comum">💼 Recursos do Usuário Comum</option>
+                  </optgroup>
+
+                  {/* === SISTEMA DE ATENDIMENTO === */}
+                  <optgroup label="📞 SISTEMA DE ATENDIMENTO">
+                    <option value="painel-atendimento">📊 Painel de Atendimento</option>
+                    <option value="modulo-atendimento">🌐 Módulo de Atendimento</option>
+                    <option value="modulo-protocolo">📄 Sistema de Protocolos</option>
+                    <option value="modulo-filas">🔄 Gerenciamento de Filas</option>
+                    <option value="horario-atendimento">🕕 Horários de Atendimento</option>
+                  </optgroup>
+
+                  {/* === COMUNICAÇÃO === */}
+                  <optgroup label="💬 COMUNICAÇÃO">
+                    <option value="mensagens-rapidas">⚡ Mensagens Rápidas</option>
+                    <option value="modulo-canais">📡 Gestão de Canais</option>
+                    <option value="modulo-chatbot">🤖 Configuração de Chatbot</option>
+                  </optgroup>
+
+                  {/* === ORGANIZAÇÃO === */}
+                  <optgroup label="🏷️ ORGANIZAÇÃO">
+                    <option value="modulo-etiquetas">🏷️ Sistema de Etiquetas</option>
+                    <option value="modulo-fechamento">✅ Processo de Fechamento</option>
+                  </optgroup>
+
+                  {/* === QUALIDADE === */}
+                  <optgroup label="🎆 QUALIDADE">
+                    <option value="modulo-avaliacao">⭐ Sistema de Avaliação</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -1050,12 +1085,46 @@ const VideoTraining = () => {
                         required
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
-                        <option value="primeiro-acesso">01 - Primeiro Acesso e Boas-vindas</option>
-                        <option value="introducao-plataforma">02 - Introdução à Plataforma</option>
-                        <option value="navegacao-painel">03 - Navegação no Painel Principal</option>
-                        <option value="modulo-atendimento">04 - Módulo de Atendimento</option>
-                        <option value="ferramentas-admin">05 - Ferramentas Administrativas</option>
-                        <option value="recursos-usuario">06 - Recursos do Usuário Final</option>
+                        {/* === INTRODUÇÃO === */}
+                        <optgroup label="🚀 INTRODUÇÃO">
+                          <option value="primeiro-acesso">🔑 Primeiro Acesso AtendaX</option>
+                          <option value="introducao-atendax">📋 Introdução AtendaX</option>
+                          <option value="explicando-painel">🖥️ Explicando Painel de Controle</option>
+                        </optgroup>
+
+                        {/* === GESTÃO DE USUÁRIOS === */}
+                        <optgroup label="👥 GESTÃO DE USUÁRIOS">
+                          <option value="modulo-usuarios">👤 Gerenciamento de Usuários</option>
+                          <option value="modulo-equipes">👪 Gestão de Equipes</option>
+                          <option value="recursos-usuario-comum">💼 Recursos do Usuário Comum</option>
+                        </optgroup>
+
+                        {/* === SISTEMA DE ATENDIMENTO === */}
+                        <optgroup label="📞 SISTEMA DE ATENDIMENTO">
+                          <option value="painel-atendimento">📊 Painel de Atendimento</option>
+                          <option value="modulo-atendimento">🌐 Módulo de Atendimento</option>
+                          <option value="modulo-protocolo">📄 Sistema de Protocolos</option>
+                          <option value="modulo-filas">🔄 Gerenciamento de Filas</option>
+                          <option value="horario-atendimento">🕕 Horários de Atendimento</option>
+                        </optgroup>
+
+                        {/* === COMUNICAÇÃO === */}
+                        <optgroup label="💬 COMUNICAÇÃO">
+                          <option value="mensagens-rapidas">⚡ Mensagens Rápidas</option>
+                          <option value="modulo-canais">📡 Gestão de Canais</option>
+                          <option value="modulo-chatbot">🤖 Configuração de Chatbot</option>
+                        </optgroup>
+
+                        {/* === ORGANIZAÇÃO === */}
+                        <optgroup label="🏷️ ORGANIZAÇÃO">
+                          <option value="modulo-etiquetas">🏷️ Sistema de Etiquetas</option>
+                          <option value="modulo-fechamento">✅ Processo de Fechamento</option>
+                        </optgroup>
+
+                        {/* === QUALIDADE === */}
+                        <optgroup label="🎆 QUALIDADE">
+                          <option value="modulo-avaliacao">⭐ Sistema de Avaliação</option>
+                        </optgroup>
                       </select>
                     </div>
 

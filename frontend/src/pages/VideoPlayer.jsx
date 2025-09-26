@@ -26,6 +26,12 @@ const VideoPlayer = () => {
   const [error, setError] = useState(null);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [canMarkComplete, setCanMarkComplete] = useState(false);
+  const [playerInstance, setPlayerInstance] = useState(null);
+  const [hasWarnedAboutSkipping, setHasWarnedAboutSkipping] = useState(false);
+  const [maxWatchedTime, setMaxWatchedTime] = useState(0);
+  const [skipCheckInterval, setSkipCheckInterval] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showCustomControls, setShowCustomControls] = useState(false);
 
   // YouTube Player API
   useEffect(() => {
@@ -97,10 +103,10 @@ const VideoPlayer = () => {
         videoId: video.youtubeId,
         playerVars: {
           autoplay: 1,
-          controls: 1,
-          disablekb: 0,
+          controls: 0, // Sempre desabilitar controles nativos do YouTube
+          disablekb: 1, // Sempre desabilitar teclado
           enablejsapi: 1,
-          fs: 1,
+          fs: progress?.completed ? 1 : 0, // Desabilitar fullscreen se não concluído
           modestbranding: 1,
           rel: 0,
           start: Math.floor(currentTime)
@@ -108,7 +114,11 @@ const VideoPlayer = () => {
         events: {
           onReady: (event) => {
             setIsPlayerReady(true);
+            setPlayerInstance(event.target);
             startProgressTracking(event.target);
+
+            // Sempre configurar prevenção (será desativada se já concluído)
+            setupSkipPrevention(event.target);
           },
           onStateChange: (event) => {
             handlePlayerStateChange(event);
@@ -141,11 +151,95 @@ const VideoPlayer = () => {
     }, 5000);
   };
 
+  const setupSkipPrevention = (player) => {
+    // Inicializar o tempo máximo assistido
+    const initialWatchedTime = progress?.watchedSeconds || 0;
+    setMaxWatchedTime(initialWatchedTime);
+
+    // Monitoramento super agressivo - a cada 500ms
+    const interval = setInterval(async () => {
+      if (progress?.completed) {
+        clearInterval(interval);
+        return;
+      }
+
+      try {
+        const currentTime = await player.getCurrentTime();
+        const duration = await player.getDuration();
+
+        if (currentTime && duration) {
+          // Atualizar tempo máximo apenas se progrediu naturalmente (margem de 3s)
+          if (currentTime <= maxWatchedTime + 3) {
+            setMaxWatchedTime(Math.max(maxWatchedTime, currentTime));
+          }
+
+          // Se o usuário pulou mais de 3 segundos à frente do máximo assistido
+          if (currentTime > maxWatchedTime + 3) {
+            // Mostrar aviso apenas uma vez
+            if (!hasWarnedAboutSkipping) {
+              setHasWarnedAboutSkipping(true);
+              alert('🚫 Pulo Detectado!\n\n⚠️ Para garantir o aprendizado, você deve assistir o vídeo sequencialmente.\n\n🔒 Os controles serão liberados após completar 100% do vídeo.');
+            }
+
+            // Forçar retorno para a posição máxima assistida
+            player.seekTo(Math.max(0, maxWatchedTime - 1), true);
+            player.pauseVideo(); // Pausar para dar ênfase
+
+            // Despausar após 1 segundo
+            setTimeout(() => {
+              try {
+                player.playVideo();
+              } catch (e) {
+                console.log('Player não disponível');
+              }
+            }, 1000);
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao verificar pulos:', error);
+      }
+    }, 500); // Verificar a cada meio segundo
+
+    setSkipCheckInterval(interval);
+    return interval;
+  };
+
   const handlePlayerStateChange = (event) => {
+    // Atualizar estado de reprodução
+    setIsPlaying(event.data === 1); // 1 = playing
+
     // YT.PlayerState.ENDED = 0
     if (event.data === 0) {
       // Vídeo terminou - marcar como completo automaticamente
       markAsComplete();
+    }
+
+    // YT.PlayerState.PLAYING = 1 - Verificação adicional ao play
+    if (event.data === 1 && !progress?.completed) {
+      setTimeout(async () => {
+        try {
+          const currentTime = await playerInstance?.getCurrentTime();
+          if (currentTime > maxWatchedTime + 2) {
+            playerInstance?.seekTo(Math.max(0, maxWatchedTime), true);
+          }
+        } catch (error) {
+          console.error('Erro ao verificar posição no play:', error);
+        }
+      }, 200);
+    }
+
+    // YT.PlayerState.PAUSED = 2 - Verificar também quando pausa
+    if (event.data === 2 && !progress?.completed) {
+      setTimeout(async () => {
+        try {
+          const currentTime = await playerInstance?.getCurrentTime();
+          if (currentTime > maxWatchedTime + 2) {
+            playerInstance?.seekTo(Math.max(0, maxWatchedTime), true);
+          }
+        } catch (error) {
+          console.error('Erro ao verificar posição na pausa:', error);
+        }
+      }, 100);
     }
   };
 
@@ -179,7 +273,19 @@ const VideoPlayer = () => {
       setProgress(updatedProgress);
 
       // Mostrar mensagem de sucesso
-      alert('Vídeo marcado como concluído!');
+      alert('🎉 Parabéns! Vídeo concluído!\n\n🔓 Os controles de navegação foram liberados.\nAgora você pode navegar livremente pelo vídeo para revisar o conteúdo.');
+
+      // Reinicializar o player com controles habilitados
+      if (playerInstance && video.youtubeId) {
+        playerInstance.destroy();
+        setIsPlayerReady(false);
+        setPlayerInstance(null);
+
+        // Pequeno delay para garantir que o player foi destruído
+        setTimeout(() => {
+          initializePlayer();
+        }, 500);
+      }
 
     } catch (error) {
       console.error('Erro ao marcar como concluído:', error);
@@ -214,8 +320,18 @@ const VideoPlayer = () => {
       if (updateIntervalRef.current) {
         clearInterval(updateIntervalRef.current);
       }
+      if (skipCheckInterval) {
+        clearInterval(skipCheckInterval);
+      }
+      if (playerInstance) {
+        try {
+          playerInstance.destroy();
+        } catch (error) {
+          console.log('Player já foi destruído');
+        }
+      }
     };
-  }, []);
+  }, [playerInstance, skipCheckInterval]);
 
   if (loading) {
     return (
@@ -288,8 +404,54 @@ const VideoPlayer = () => {
 
       {/* Video Player */}
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="aspect-video bg-black">
+        <div className="aspect-video bg-black relative"
+             onMouseEnter={() => setShowCustomControls(true)}
+             onMouseLeave={() => setShowCustomControls(false)}>
           <div ref={playerRef} className="w-full h-full"></div>
+
+          {/* Custom Controls Overlay para vídeos concluídos */}
+          {isCompleted && showCustomControls && (
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => playerInstance?.playVideo()}
+                  className="text-white hover:text-green-400 transition-colors"
+                  disabled={!playerInstance}
+                >
+                  <PlayCircle className="h-6 w-6" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    const currentTime = playerInstance?.getCurrentTime();
+                    playerInstance?.seekTo(Math.max(0, currentTime - 10), true);
+                  }}
+                  className="text-white hover:text-blue-400 transition-colors text-sm"
+                  disabled={!playerInstance}
+                >
+                  -10s
+                </button>
+
+                <button
+                  onClick={() => {
+                    const currentTime = playerInstance?.getCurrentTime();
+                    const duration = playerInstance?.getDuration();
+                    playerInstance?.seekTo(Math.min(duration, currentTime + 10), true);
+                  }}
+                  className="text-white hover:text-blue-400 transition-colors text-sm"
+                  disabled={!playerInstance}
+                >
+                  +10s
+                </button>
+
+                <div className="flex-1 text-center">
+                  <span className="text-white text-sm">
+                    🔓 Controles Liberados - Você pode navegar livremente
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Video Info */}
@@ -317,6 +479,18 @@ const VideoPlayer = () => {
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <span>{formatTime(currentTime)} / {formatTime(video.duration)}</span>
                 <span>{Math.round(progressPercentage)}%</span>
+                {!isCompleted && (
+                  <div className="flex items-center space-x-1 text-orange-600">
+                    <span className="text-xs">🔒</span>
+                    <span className="text-xs font-medium">Controles Bloqueados</span>
+                  </div>
+                )}
+                {isCompleted && (
+                  <div className="flex items-center space-x-1 text-green-600">
+                    <span className="text-xs">🔓</span>
+                    <span className="text-xs font-medium">Controles Liberados</span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
@@ -327,6 +501,14 @@ const VideoPlayer = () => {
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
+            {!isCompleted && (
+              <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-xs text-amber-800">
+                  <strong>🔒 Modo de Aprendizado:</strong> Os controles de navegação estão bloqueados para garantir o aprendizado completo.
+                  Após concluir 100% do vídeo, você poderá navegar livremente para revisar o conteúdo.
+                </p>
+              </div>
+            )}
             {progressPercentage < 60 && (
               <p className="text-xs text-gray-500 mt-1">
                 Assista pelo menos 60% do vídeo para marcá-lo como concluído
